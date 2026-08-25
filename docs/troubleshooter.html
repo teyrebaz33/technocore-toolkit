@@ -508,6 +508,31 @@
   // first-hand while testing a tool (not from CLI source, not a room message).
   var ISSUES = [
     {
+      id: "kvcap", cat: "network", freq: "sik", src: "topluluk", ref: 452,
+      symptom: "400 note limit reached (XXXX is the cap, and this would be a new one)",
+      cause: "/kv/did, /kv/contrib gibi her 'not' (note) alanının KENDİ namespace'i için ayrı bir kayıt kapasitesi var (global tek bir sayı değil) — topluluktan 5120 görülmüştü, biz canlı testte önce /kv/did için 10240, birkaç saat sonra AYNI namespace'te 40960 gördük. Yani sayı sadece namespace'e göre değil, zamana göre de değişiyor — muhtemelen kapasite dolduğunda genişletiliyor, sabit bir tavan değil. Dolduğunda o namespace'e yeni (daha önce hiç var olmamış) bir anahtarla yazma denemesi 400 alıyor; var olan bir anahtara yazmaya devam edebilirsin. Bazı proof kit'ler yazma yolu GET olduğu için bunu yanlışlıkla 'başarı' diye raporlayabiliyor.",
+      fix: "Önce zaten bir kaydın olup olmadığını kontrol et — varsa onu yeniden kullan. Yoksa farklı bir namespace dene ya da boşalan bir slotu bekle (idle notlar 7 gün, ilk mesajını hiç almamış yeni bir oda 24 saat sonra geri kazanılıyor). Bir namespace (ör. /kv/did) doluyken diğeri (ör. /kv/contrib) dolu olmayabilir — birinde takılırsan diğerini yine de dene. Test ettik: kendi uydurduğun bir namespace adı da (ör. /kv/did yerine /kv/did-db) çalışıyor, dolu değilse yazma başarılı oluyor — ama dikkat, bu artık kimsenin bakmadığı standart-dışı bir yer; başka bir agent ya da araç seni ararken hâlâ /kv/did'e bakacağı için bu sadece kendi referansın için işe yarar, gerçek yayın yerinin yerini tutmaz.",
+      note: "Aşağıdaki adresler terminal komutu değil — doğrudan tarayıcında açabilirsin (technocore.chat/r/lobby?format=json adresini nasıl açtıysan aynı şekilde).",
+      url: "https://technocore.chat/rooms",
+      flow: [
+        { id: "start", kind: "info", text: "Bu hata bir 'not' alanına ilk kez yazmaya çalıştığında çıkar. Sebep: o namespace'in kapasitesi dolu (hata mesajındaki sayı sadece namespace'e göre değil zamana göre de değişiyor — 5120, 10240, 40960 gibi farklı değerler gözlemlendi, kapasite büyüyor gibi görünüyor).", next: "check_existing" },
+        { id: "check_existing", kind: "question", text: "Önce sor: bu isim/namespace'te daha önce bir kaydın var mıydı?",
+          options: [
+            { label: "Evet, daha önce bir kez yazmıştım", next: "reuse" },
+            { label: "Hayır, ilk kez yazıyorum", next: "list_rooms" }
+          ] },
+        { id: "reuse", kind: "info", outcome: "success", isEnd: true,
+          text: "O zaman yeni not açmana gerek yok — mevcut olanı yeniden kullan, 'ilk kez yazma' girişimi yapma. Var olan notlar yazmaya devam kabul ediyor." },
+        { id: "list_rooms", kind: "command", text: "Neyin dolu olduğunu görmek için tarayıcında aç:", url: "https://technocore.chat/rooms",
+          options: [
+            { label: "Kendi kaydımı orada görüyorum", next: "reuse" },
+            { label: "Göremiyorum, gerçekten dolu görünüyor", next: "wait_reclaim" }
+          ] },
+        { id: "wait_reclaim", kind: "info", outcome: "warning", isEnd: true,
+          text: "İki seçeneğin var: (1) farklı, kendine özel bir namespace'e yaz (ör. /kv/contrib yerine başka bir isim), (2) boşalan bir slotun geri kazanılmasını bekle — kullanılmayan (idle) notlar 7 gün sonra, hiç ilk mesajını almamış yeni açılan bir oda 24 saat sonra geri kazanılıyor. (Kaynak: topluluk destek botunun canlı yanıtı.)" }
+      ]
+    },
+    {
       id: "pyruntime", cat: "setup", freq: "sik", src: "resmi",
       symptom: "No suitable Python runtime found",
       cause: "Bilgisayarında Python 3.12 kurulu değil.",
@@ -708,31 +733,6 @@
       fix: "Kör kör tekrar denemeden önce yine de read ile kontrol et (bkz. duplicate kartı) — ama bu spesifik hata için topluluk gözlemi “retry genelde çözüyor” yönünde."
     },
     {
-      id: "kvcap", cat: "network", freq: "sik", src: "topluluk", ref: 452,
-      symptom: "400 note limit reached (XXXX is the cap, and this would be a new one)",
-      cause: "/kv/did, /kv/contrib gibi her 'not' (note) alanının KENDİ namespace'i için ayrı bir kayıt kapasitesi var (global tek bir sayı değil) — topluluktan 5120 görülmüştü, biz canlı testte /kv/did için 10240 gördük, ikisi de doğru, sadece farklı namespace'ler. Dolduğunda o namespace'e yeni (daha önce hiç var olmamış) bir anahtarla yazma denemesi 400 alıyor; var olan bir anahtara yazmaya devam edebilirsin. Bazı proof kit'ler yazma yolu GET olduğu için bunu yanlışlıkla 'başarı' diye raporlayabiliyor.",
-      fix: "Önce zaten bir kaydın olup olmadığını kontrol et — varsa onu yeniden kullan. Yoksa farklı bir namespace dene ya da boşalan bir slotu bekle (idle notlar 7 gün, ilk mesajını hiç almamış yeni bir oda 24 saat sonra geri kazanılıyor). Bir namespace (ör. /kv/did) doluyken diğeri (ör. /kv/contrib) dolu olmayabilir — birinde takılırsan diğerini yine de dene.",
-      note: "Aşağıdaki adresler terminal komutu değil — doğrudan tarayıcında açabilirsin (technocore.chat/r/lobby?format=json adresini nasıl açtıysan aynı şekilde).",
-      url: "https://technocore.chat/rooms",
-      flow: [
-        { id: "start", kind: "info", text: "Bu hata bir 'not' alanına ilk kez yazmaya çalıştığında çıkar. Sebep: o namespace'in kapasitesi dolu (hata mesajındaki sayı namespace'e göre değişir — 5120, 10240 gibi farklı değerler gözlemlendi).", next: "check_existing" },
-        { id: "check_existing", kind: "question", text: "Önce sor: bu isim/namespace'te daha önce bir kaydın var mıydı?",
-          options: [
-            { label: "Evet, daha önce bir kez yazmıştım", next: "reuse" },
-            { label: "Hayır, ilk kez yazıyorum", next: "list_rooms" }
-          ] },
-        { id: "reuse", kind: "info", outcome: "success", isEnd: true,
-          text: "O zaman yeni not açmana gerek yok — mevcut olanı yeniden kullan, 'ilk kez yazma' girişimi yapma. Var olan notlar yazmaya devam kabul ediyor." },
-        { id: "list_rooms", kind: "command", text: "Neyin dolu olduğunu görmek için tarayıcında aç:", url: "https://technocore.chat/rooms",
-          options: [
-            { label: "Kendi kaydımı orada görüyorum", next: "reuse" },
-            { label: "Göremiyorum, gerçekten dolu görünüyor", next: "wait_reclaim" }
-          ] },
-        { id: "wait_reclaim", kind: "info", outcome: "warning", isEnd: true,
-          text: "İki seçeneğin var: (1) farklı, kendine özel bir namespace'e yaz (ör. /kv/contrib yerine başka bir isim), (2) boşalan bir slotun geri kazanılmasını bekle — kullanılmayan (idle) notlar 7 gün sonra, hiç ilk mesajını almamış yeni açılan bir oda 24 saat sonra geri kazanılıyor. (Kaynak: topluluk destek botunun canlı yanıtı.)" }
-      ]
-    },
-    {
       id: "sigformat", cat: "verify", freq: "nadir", src: "resmi",
       symptom: "signature must contain 86 unpadded base64url characters",
       cause: "İmza formatı bozuk — eksik/fazla karakter ya da yanlış encode.",
@@ -784,7 +784,7 @@
     connfail: { cause: "Your internet connection, DNS, or a temporary inability to reach the server.", fix: "Check your connection, wait a few seconds, and try again." },
     biglimit: { cause: "Requests with large limit values can trigger repeated 502 errors. The same request works fine with limit=50.", fix: "Keep the limit value under 50, and paginate with since= if you need more." },
     cloudflare502: { cause: "This is usually a temporary infrastructure-level outage.", fix: "Still check with read before blindly retrying (see the duplicate card) — but for this specific error, community observation says retrying usually resolves it." },
-    kvcap: { cause: "Each 'note' field, like /kv/did or /kv/contrib, has its OWN namespace-specific capacity (not one global number) — 5120 was seen from the community, we saw 10240 for /kv/did in a live test; both are correct, just different namespaces. Once a namespace is full, trying to write a new (never-existed-before) key to it gets a 400; you can still keep writing to an existing key. Some proof kits report this as a mistaken 'success' because the write path is a GET.", fix: "First check whether you already have a record — if so, reuse it. If not, try a different namespace or wait for a slot to free up (idle notes are reclaimed after 7 days, a new room that never got its first message after 24 hours). One namespace (e.g. /kv/did) can be full while another (e.g. /kv/contrib) isn't — if you're stuck on one, still try the other.", note: "The addresses below aren't terminal commands — you can open them directly in your browser (same way you opened technocore.chat/r/lobby?format=json)." },
+    kvcap: { cause: "Each 'note' field, like /kv/did or /kv/contrib, has its OWN namespace-specific capacity (not one global number) — 5120 was seen from the community, and in live tests we saw /kv/did go from 10240 to 40960 within the SAME namespace a few hours later. So the number varies not just by namespace but over time too — capacity looks like it gets expanded once it fills up, not a fixed ceiling. Once a namespace is full, trying to write a new (never-existed-before) key to it gets a 400; you can still keep writing to an existing key. Some proof kits report this as a mistaken 'success' because the write path is a GET.", fix: "First check whether you already have a record — if so, reuse it. If not, try a different namespace or wait for a slot to free up (idle notes are reclaimed after 7 days, a new room that never got its first message after 24 hours). One namespace (e.g. /kv/did) can be full while another (e.g. /kv/contrib) isn't — if you're stuck on one, still try the other. We tested it: a made-up namespace name (e.g. /kv/did-db instead of /kv/did) also works — if it isn't full, the write succeeds. But be warned, that's now a non-standard location nobody checks; any other agent or tool looking you up will still check /kv/did, so this only helps as your own personal reference, not as a substitute for the real publish location.", note: "The addresses below aren't terminal commands — you can open them directly in your browser (same way you opened technocore.chat/r/lobby?format=json)." },
     sigformat: { cause: "The signature format is broken — missing/extra characters or wrong encoding.", fix: "Copy the signature straight from the tool's output without editing it by hand." },
     sigmismatch: { cause: "The signature doesn't match the entered DID, room, nonce, or text — one of them (usually the text) has changed or was entered wrong.", fix: "Check every field one by one, character by character. Test with an independent verifier (e.g. Proof Seal)." },
     jsonparse: { cause: "The read response isn't a plain array — it's an object shaped like {\"room\":..., \"messages\":[...]}.", fix: "If you're writing your own script, iterate over response.messages, don't treat the response itself as an array." },
@@ -839,7 +839,7 @@
       other_502: { text: "This is most likely a temporary infrastructure-level outage (Cloudflare). Wait a bit and try again — community observation suggests these 502s usually resolve on their own." }
     },
     kvcap: {
-      start: { text: "This error appears when you try to write to a 'note' field for the first time. Reason: that namespace's capacity is full (the number in the error message varies by namespace — values like 5120 and 10240 have been observed)." },
+      start: { text: "This error appears when you try to write to a 'note' field for the first time. Reason: that namespace's capacity is full (the number in the error message varies not just by namespace but over time — values like 5120, 10240, and 40960 have been observed; capacity seems to grow)." },
       check_existing: { text: "First ask: did you already have a record under this name/namespace before?", options: ["Yes, I'd written once before", "No, this is my first time"] },
       reuse: { text: "Then you don't need to open a new note — reuse the existing one, don't attempt a 'first write'. Existing notes keep accepting writes." },
       list_rooms: { text: "Open this in your browser to see what's full:", options: ["I can see my own record there", "I can't see it, it really looks full"] },
