@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Technocore Kurulum Sihirbazı</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --ground: #EEEAE0;
+    --surface: #FAF8F3;
+    --surface-recessed: #E4DFD1;
+    --ink: #241F18;
+    --ink-muted: #6E6555;
+    --ink-faint: #9A927E;
+    --line: #DDD5C4;
+    --line-strong: #C7BCA4;
+    --accent: #A9631A;
+    --accent-strong: #7E4E12;
+    --accent-ink: #FFF8EE;
+    --accent-wash: #EFE1CB;
+    --ok: #3F7A5C;
+    --ok-wash: #E1EBE2;
+    --warn: #A9631A;
+    --warn-wash: #EFE1CB;
+    --block: #A5392A;
+    --block-wash: #F2E1DC;
+    --win: #4C6B8A;
+    --win-wash: #E3E9EF;
+    --mac: #74508F;
+    --mac-wash: #EAE3F0;
+    --shadow: 0 1px 2px rgba(36, 31, 24, 0.06), 0 8px 22px -14px rgba(36, 31, 24, 0.22);
+    --font-display: "Zilla Slab", "Iowan Old Style", Georgia, serif;
+    --font-body: "Public Sans", "Segoe UI", system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #171310; --surface: #1F1A15; --surface-recessed: #131009;
+      --ink: #F0EAE0; --ink-muted: #A89C87; --ink-faint: #6E6455;
+      --line: #332A20; --line-strong: #453A2B;
+      --accent: #E0A458; --accent-strong: #F0C286; --accent-ink: #241705; --accent-wash: #332415;
+      --ok: #7FC79A; --ok-wash: #1C2E20; --warn: #E0A458; --warn-wash: #332415;
+      --block: #E28576; --block-wash: #35201A;
+      --win: #8FAFD1; --win-wash: #1E2733; --mac: #C1A0E3; --mac-wash: #271F32;
+      --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 28px -16px rgba(0,0,0,0.65);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #171310; --surface: #1F1A15; --surface-recessed: #131009;
+    --ink: #F0EAE0; --ink-muted: #A89C87; --ink-faint: #6E6455;
+    --line: #332A20; --line-strong: #453A2B;
+    --accent: #E0A458; --accent-strong: #F0C286; --accent-ink: #241705; --accent-wash: #332415;
+    --ok: #7FC79A; --ok-wash: #1C2E20; --warn: #E0A458; --warn-wash: #332415;
+    --block: #E28576; --block-wash: #35201A;
+    --win: #8FAFD1; --win-wash: #1E2733; --mac: #C1A0E3; --mac-wash: #271F32;
+    --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 28px -16px rgba(0,0,0,0.65);
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--ground); color: var(--ink); font-family: var(--font-body); line-height: 1.55; padding: 0 0 70px; }
+  a { color: var(--accent-strong); }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+
+  header.masthead { padding: clamp(26px, 5vw, 44px) 0 20px; }
+  .eyebrow { display: flex; align-items: center; gap: 9px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 14px; }
+  .eyebrow .tab { width: 18px; height: 10px; border-radius: 2px; background: var(--accent); flex: none; }
+  .top-actions { margin-left: auto; display: flex; gap: 6px; }
+  .toggle-btn { font-family: var(--font-mono); font-size: 11.5px; padding: 5px 10px; border-radius: 6px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink-muted); cursor: pointer; }
+  .toggle-btn:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 5.2vw, 40px); line-height: 1.1; margin: 0 0 12px; text-wrap: balance; }
+  .lede { color: var(--ink-muted); font-size: 15.5px; max-width: 60ch; margin: 0; }
+  .lede strong { color: var(--ink); font-weight: 600; }
+
+  .cross-links { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+  .cross-link { font-family: var(--font-mono); font-size: 12px; padding: 6px 11px; border-radius: 7px; border: 1px solid var(--line-strong); background: var(--surface); text-decoration: none; color: var(--ink-muted); }
+  .cross-link:hover { color: var(--ink); }
+
+  .path-badge { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-mono); font-size: 12px; padding: 5px 11px; border-radius: 999px; margin-top: 16px; }
+  .path-badge.win { background: var(--win-wash); color: var(--win); }
+  .path-badge.mac { background: var(--mac-wash); color: var(--mac); }
+
+  .wizard {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    box-shadow: var(--shadow); padding: clamp(20px, 4vw, 30px); margin-top: 20px;
+  }
+
+  .crumbs { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); margin-bottom: 16px; }
+  .crumbs .crumb { padding: 2px 7px; border-radius: 5px; background: var(--surface-recessed); border: 1px solid var(--line); }
+  .crumbs .crumb.current { color: var(--accent-strong); border-color: var(--accent); font-weight: 600; }
+  .crumbs .sep { opacity: 0.5; }
+  .crumbs .back-btn { margin-left: auto; font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); background: var(--surface-recessed); border: 1px solid var(--line); border-radius: 6px; padding: 3px 9px; cursor: pointer; }
+
+  .step-kicker { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+  .step-text { font-size: 16.5px; color: var(--ink); margin-bottom: 4px; }
+
+  .os-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; }
+  @media (max-width: 480px) { .os-choices { grid-template-columns: 1fr; } }
+  .os-card {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
+    padding: 20px 18px; border-radius: 12px; border: 1.5px solid var(--line-strong);
+    background: var(--surface-recessed); cursor: pointer; text-align: left;
+  }
+  .os-card:hover { border-color: var(--accent); }
+  .os-card .icon { font-family: var(--font-display); font-size: 26px; }
+  .os-card .name { font-family: var(--font-display); font-weight: 600; font-size: 18px; }
+  .os-card .desc { font-size: 12.5px; color: var(--ink-faint); }
+
+  .cmd-block { margin-top: 10px; background: var(--surface-recessed); border: 1px solid var(--line); border-radius: 8px; padding: 11px 13px; font-family: var(--font-mono); font-size: 13px; overflow-x: auto; white-space: pre; color: var(--ink); }
+  .cmd-row { display: flex; align-items: flex-start; gap: 8px; }
+  .cmd-row .cmd-block { flex: 1; margin-top: 10px; }
+  .copy-btn { flex: none; margin-top: 10px; font-family: var(--font-mono); font-size: 11px; padding: 7px 10px; border-radius: 7px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink-muted); cursor: pointer; }
+  .copy-btn:hover { color: var(--ink); }
+  .copy-btn.copied { color: var(--ok); border-color: var(--ok); }
+
+  .url-block { margin-top: 10px; background: var(--accent-wash); border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; font-family: var(--font-mono); font-size: 12.5px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .url-block a { color: var(--accent-strong); word-break: break-all; }
+  .url-block .url-hint { font-family: var(--font-body); font-size: 11px; color: var(--ink-faint); }
+
+  .note-box { margin-top: 10px; font-size: 13px; color: var(--ink-muted); background: var(--surface-recessed); border-left: 3px solid var(--line-strong); border-radius: 4px; padding: 8px 12px; }
+
+  .options { display: grid; gap: 9px; margin-top: 18px; }
+  .opt-btn { text-align: left; font-family: var(--font-body); font-size: 14px; font-weight: 600; padding: 12px 15px; border-radius: 9px; border: 1.5px solid var(--line-strong); background: var(--surface-recessed); color: var(--ink); cursor: pointer; }
+  .opt-btn:hover { border-color: var(--accent); }
+
+  .next-row { display: flex; gap: 10px; margin-top: 20px; }
+  .btn-primary { font-family: var(--font-body); font-weight: 700; font-size: 14.5px; padding: 11px 22px; border-radius: 9px; border: 1px solid var(--accent-strong); background: var(--accent); color: var(--accent-ink); cursor: pointer; }
+  .btn-secondary { font-family: var(--font-body); font-weight: 600; font-size: 13.5px; padding: 10px 16px; border-radius: 9px; border: 1.5px solid var(--line-strong); background: transparent; color: var(--ink-muted); cursor: pointer; }
+
+  .outcome-badge { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 15px; padding: 6px 0 12px; }
+  .outcome-badge.success { color: var(--ok); } .outcome-badge.warning { color: var(--warn); }
+  .outcome-badge .badge { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-family: var(--font-mono); }
+  .outcome-badge.success .badge { background: var(--ok-wash); } .outcome-badge.warning .badge { background: var(--warn-wash); }
+
+  .about-note { margin-top: 26px; font-size: 13px; color: var(--ink-muted); background: var(--accent-wash); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .about-note strong { color: var(--ink); }
+
+  footer.page-footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--ink-faint); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <div class="eyebrow">
+      <span class="tab"></span><span>Technocore &middot; topluluk kaynağı</span>
+      <span class="top-actions"><button class="toggle-btn" id="themeToggle">Koyu</button></span>
+    </div>
+    <h1>Sıfırdan Technocore kurulumu</h1>
+    <p class="lede">
+      İşletim sistemine g&ouml;re, terminalinden ba&#351;layarak <strong>tek tek</strong> seni y&ouml;nlendiren bir
+      sihirbaz. &Ouml;nce gerekli program varsa kuruyoruz, sonra zunmax'&#305;n arac&#305;n&#305; kurup ilk DID'ini
+      olu&#351;turuyoruz. Her komutta kopyala butonu var, hi&ccedil;bir yerde private key veya parolan bizden ge&ccedil;miyor.
+    </p>
+    <div class="cross-links">
+      <a class="cross-link" href="index.html">🏠 Toolkit ana sayfası</a>
+      <a class="cross-link" href="troubleshooter.html" target="_blank" rel="noopener">🛠 Sorun Giderici</a>
+      <a class="cross-link" href="proof-seal.html" target="_blank" rel="noopener">🔏 Proof Seal (imza doğrulayıcı)</a>
+      <a class="cross-link" href="https://github.com/zunmax/technocore-did-starter" target="_blank" rel="noopener">📦 Kaynak kod</a>
+    </div>
+    <div id="pathBadgeWrap"></div>
+  </header>
+
+  <div class="wizard" id="wizard"></div>
+
+  <div class="about-note">
+    <strong>Not:</strong> Bu resm&icirc; bir Flop Labs kayna&#287;&#305; de&#287;il. Kurulum ad&#305;mlar&#305; iki yerden
+    geliyor: i&#351;letim sistemi seviyesindeki komutlar (WSL, Homebrew, winget) ilgili resm&icirc; dok&uuml;mantasyondan
+    do&#287;rulanarak al&#305;nd&#305;; Technocore arac&#305;n&#305;n kendi kurulumu ise
+    <a href="https://github.com/zunmax/technocore-did-starter" target="_blank" rel="noopener">zunmax/technocore-did-starter</a>
+    reposunun ka&#351;esinden ve kaynak kodundan. Bir hata al&#305;rsan Sorun Giderici'ye bakabilirsin.
+  </div>
+
+  <footer class="page-footer">
+    <span>technocore-did-starter · zunmax</span>
+    <span id="cryptoNote">WSL: learn.microsoft.com/windows/wsl · Homebrew: brew.sh</span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var NODES = {};
+  function n(node) { NODES[node.id] = node; }
+
+  // ---------------- OS select ----------------
+  n({ id: "os", kind: "oscard", text: "Hangi işletim sistemini kullanıyorsun?" });
+
+  // ---------------- WINDOWS: entry ----------------
+  n({ id: "win-wsl-q", kind: "question", path: "win",
+      text: "Bu bilgisayarda Ubuntu (WSL) kurulu mu? Emin değilsen üçüncü seçeneği seç, birlikte kontrol ederiz.",
+      options: [
+        { label: "Evet, kurulu", next: "win-wsl-open" },
+        { label: "Hayır, kurulu değil", next: "win-wsl-install" },
+        { label: "Emin değilim", next: "win-wsl-check" },
+        { label: "WSL istemiyorum, doğrudan PowerShell kullanacağım", next: "win-ps-check-python" }
+      ] });
+
+  n({ id: "win-wsl-check", kind: "command", path: "win",
+      text: "PowerShell'i aç (Başlat menüsü → \"powershell\" yaz → Enter), şunu çalıştır:",
+      cmd: "wsl --list --verbose",
+      options: [
+        { label: "Listede Ubuntu görüyorum", next: "win-wsl-open" },
+        { label: "Boş / hata / Ubuntu yok", next: "win-wsl-install" }
+      ] });
+
+  n({ id: "win-wsl-install", kind: "command", path: "win",
+      text: "PowerShell'i YÖNETİCİ olarak aç (Başlat → powershell → sağ tık → \"Yönetici olarak çalıştır\"), şunu çalıştır. Bunun için Windows 10 (2004+) ya da Windows 11 gerekiyor:",
+      cmd: "wsl --install -d Ubuntu", next: "win-wsl-restart" });
+
+  n({ id: "win-wsl-restart", kind: "info", path: "win",
+      text: "Kurulum bitince bilgisayarını YENİDEN BAŞLAT — bu adım zorunlu. Açıldığında Ubuntu otomatik başlayabilir; başlamazsa Başlat menüsünden \"Ubuntu\" yazıp aç. İlk açılışta bir kullanıcı adı ve parola isteyecek — bu Windows şifrenle alakasız, sadece Ubuntu içinde kullanacağın yeni bir kullanıcı, istediğini seç ve unutma.",
+      next: "win-wsl-open" });
+
+  n({ id: "win-wsl-open", kind: "info", path: "win",
+      text: "Ubuntu terminali artık kullanıma hazır. Başlat menüsünden \"Ubuntu\" yazıp aç — bundan sonraki adımlar bu pencerede.",
+      next: "linux-update" });
+
+  // ---------------- WINDOWS: native PowerShell path ----------------
+  n({ id: "win-ps-check-python", kind: "command", path: "win-ps",
+      text: "PowerShell'i aç, Python sürümünü kontrol et:", cmd: "py -3.12 --version",
+      options: [
+        { label: "Python 3.12.x gördüm", next: "win-ps-git" },
+        { label: "\"No suitable Python runtime found\" / hata", next: "win-ps-python-install" }
+      ] });
+  n({ id: "win-ps-python-install", kind: "command", path: "win-ps",
+      text: "Python 3.12'yi kur:", cmd: "winget install -e --id Python.Python.3.12", next: "win-ps-python-restart" });
+  n({ id: "win-ps-python-restart", kind: "info", path: "win-ps",
+      text: "Kurulum bitince PowerShell penceresini kapat, yeniden aç.", next: "win-ps-check-python2" });
+  n({ id: "win-ps-check-python2", kind: "command", path: "win-ps",
+      text: "Tekrar dene:", cmd: "py -3.12 --version",
+      options: [
+        { label: "Şimdi gördüm", next: "win-ps-git" },
+        { label: "Hâlâ olmuyor", next: "win-ps-python-fail" }
+      ] });
+  n({ id: "win-ps-python-fail", kind: "info", path: "win-ps", outcome: "warning", isEnd: true,
+      text: "Sorun Giderici'deki \"No suitable Python runtime found\" kartına bak — orada bu hatanın daha fazla ayrıntısı var." });
+
+  n({ id: "win-ps-git", kind: "command", path: "win-ps",
+      text: "Git kurulu mu kontrol et:", cmd: "git --version",
+      options: [
+        { label: "Bir sürüm gördüm", next: "win-ps-clone" },
+        { label: "Kurulu değil / tanınmıyor", next: "win-ps-git-install" }
+      ] });
+  n({ id: "win-ps-git-install", kind: "command", path: "win-ps",
+      text: "Git'i kur:", cmd: "winget install --id Git.Git -e", next: "win-ps-git-restart" });
+  n({ id: "win-ps-git-restart", kind: "info", path: "win-ps",
+      text: "PowerShell'i kapatıp yeniden aç.", next: "win-ps-clone" });
+
+  n({ id: "win-ps-clone", kind: "command", path: "win-ps",
+      text: "Projeyi indir:", cmd: "git clone https://github.com/zunmax/technocore-did-starter.git\ncd technocore-did-starter",
+      next: "win-ps-venv" });
+  n({ id: "win-ps-venv", kind: "command", path: "win-ps",
+      text: "Kendine özel bir Python ortamı oluştur:", cmd: "py -3.12 -m venv .venv", next: "win-ps-activate" });
+  n({ id: "win-ps-activate", kind: "command", path: "win-ps",
+      text: "Ortamı aktive et:", cmd: ".\\.venv\\Scripts\\Activate.ps1",
+      options: [
+        { label: "Satırın başında (.venv) görüyorum", next: "win-ps-deps" },
+        { label: "\"çalıştırılamıyor / scripts disabled\" hatası", next: "win-ps-policy" }
+      ] });
+  n({ id: "win-ps-policy", kind: "command", path: "win-ps",
+      text: "Script çalıştırma iznini bu oturum için aç:", cmd: "Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass",
+      next: "win-ps-activate-retry" });
+  n({ id: "win-ps-activate-retry", kind: "command", path: "win-ps",
+      text: "Tekrar dene:", cmd: ".\\.venv\\Scripts\\Activate.ps1", next: "win-ps-deps" });
+  n({ id: "win-ps-deps", kind: "command", path: "win-ps",
+      text: "Gerekli paketleri kur:", cmd: "python -m pip install --upgrade pip\npython -m pip install -r requirements.txt",
+      next: "win-ps-verify" });
+  n({ id: "win-ps-verify", kind: "command", path: "win-ps",
+      text: "Kurulumu doğrula:", cmd: "python technocore_agent.py --version",
+      options: [
+        { label: "1.0.0 gibi bir sürüm gördüm", next: "win-ps-init" },
+        { label: "Hata aldım", next: "win-ps-verify-fail" }
+      ] });
+  n({ id: "win-ps-verify-fail", kind: "info", path: "win-ps", outcome: "warning", isEnd: true,
+      text: "\"No module named cryptography\" görüyorsan venv aktif değildir — Activate.ps1'i tekrar çalıştır. Başka bir hata görüyorsan Sorun Giderici'ye bak." });
+  n({ id: "win-ps-init", kind: "command", path: "win-ps",
+      text: "Artık kendi DID'ini oluşturabilirsin — en az 12 karakterlik bir parola belirleyip iki kez gir:",
+      cmd: "python technocore_agent.py init", next: "win-ps-lobby" });
+  n({ id: "win-ps-lobby", kind: "command", path: "win-ps",
+      text: "Technocore'a ilk imzalı mesajını gönder:",
+      cmd: 'python technocore_agent.py say lobby "Hello from a new Technocore contributor. I am preparing a useful public resource for agents and developers."',
+      options: [
+        { label: "Başarılı bir JSON cevabı geldi", next: "done" },
+        { label: "Timeout / hata aldım", next: "lobby-fail" }
+      ] });
+
+  // ---------------- macOS path ----------------
+  n({ id: "mac-terminal", kind: "info", path: "mac",
+      text: "Terminal uygulamasını aç: Cmd+Space'e bas, \"Terminal\" yaz, Enter'a bas.", next: "mac-brew-q" });
+  n({ id: "mac-brew-q", kind: "command", path: "mac",
+      text: "Homebrew (paket yöneticisi) kurulu mu, kontrol et:", cmd: "brew --version",
+      options: [
+        { label: "Bir sürüm numarası gördüm", next: "mac-python" },
+        { label: "\"command not found\" hatası", next: "mac-brew-install" }
+      ] });
+  n({ id: "mac-brew-install", kind: "command", path: "mac",
+      text: "Homebrew'i kur (brew.sh'teki resmi kurulum komutu):",
+      cmd: '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
+      next: "mac-brew-path" });
+  n({ id: "mac-brew-path", kind: "info", path: "mac",
+      text: "Kurulum bitince terminal sana \"PATH'e ekle\" diye birkaç komut gösterebilir (özellikle Apple Silicon Mac'lerde) — ekranda çıkanları olduğu gibi kopyalayıp çalıştır, sonra Terminal'i kapatıp yeniden aç.",
+      next: "mac-python" });
+  n({ id: "mac-python", kind: "command", path: "mac",
+      text: "Python 3.12'yi Homebrew ile kur:", cmd: "brew install python@3.12", next: "mac-python-verify" });
+  n({ id: "mac-python-verify", kind: "command", path: "mac",
+      text: "Kurulumu doğrula:", cmd: "python3.12 --version",
+      options: [
+        { label: "Python 3.12.x gördüm", next: "mac-git" },
+        { label: "\"command not found\" hatası", next: "mac-python-retry" }
+      ] });
+  n({ id: "mac-python-retry", kind: "info", path: "mac", outcome: "warning", isEnd: true,
+      text: "Terminal'i tamamen kapatıp yeniden aç, tekrar dene. Hâlâ olmuyorsa bir önceki adımdaki PATH komutlarını atlamış olabilirsin — brew install python@3.12 çıktısını tekrar oku." });
+  n({ id: "mac-git", kind: "command", path: "mac",
+      text: "Git kurulu mu kontrol et (macOS genelde ilk kullanımda otomatik bir kurulum sihirbazı açar, açılırsa \"Install\" de):",
+      cmd: "git --version", next: "linux-update-mac" });
+
+  // ---------------- shared Linux/WSL apt setup ----------------
+  n({ id: "linux-update", kind: "command", path: "win",
+      text: "Ubuntu terminalinde önce paket listesini güncelle:", cmd: "sudo apt update && sudo apt upgrade -y",
+      next: "linux-python-check" });
+  n({ id: "linux-python-check", kind: "command", path: "win",
+      text: "Python sürümünü kontrol et:", cmd: "python3 --version",
+      options: [
+        { label: "3.12 ya da üzeri gördüm", next: "linux-git" },
+        { label: "3.12'den düşük bir sürüm / hata", next: "linux-python-install" }
+      ] });
+  n({ id: "linux-python-install", kind: "command", path: "win",
+      text: "Python 3.12'yi kur:", cmd: "sudo apt install -y python3.12 python3.12-venv python3-pip",
+      options: [
+        { label: "Kuruldu, sorun yok", next: "linux-git" },
+        { label: "\"Unable to locate package\" hatası", next: "linux-python-ppa" }
+      ] });
+  n({ id: "linux-python-ppa", kind: "command", path: "win",
+      text: "Ubuntu sürümün henüz 3.12'yi resmi depoda içermiyor olabilir. deadsnakes PPA'sını ekleyip tekrar dene (yaygın, güvenilir bir kaynak):",
+      cmd: "sudo apt install -y software-properties-common\nsudo add-apt-repository -y ppa:deadsnakes/ppa\nsudo apt update\nsudo apt install -y python3.12 python3.12-venv",
+      next: "linux-git" });
+  n({ id: "linux-git", kind: "command", path: "win",
+      text: "Git kurulu mu kontrol et:", cmd: "git --version",
+      options: [
+        { label: "Bir sürüm gördüm", next: "bash-clone" },
+        { label: "Kurulu değil", next: "linux-git-install" }
+      ] });
+  n({ id: "linux-git-install", kind: "command", path: "win",
+      text: "Git'i kur:", cmd: "sudo apt install -y git", next: "bash-clone" });
+
+  n({ id: "linux-update-mac", kind: "goto", next: "bash-clone" }); // macOS skips apt, goes straight to clone
+
+  // ---------------- shared bash setup (WSL + macOS converge here) ----------------
+  n({ id: "bash-clone", kind: "command",
+      text: "Projeyi indir:", cmd: "git clone https://github.com/zunmax/technocore-did-starter.git\ncd technocore-did-starter",
+      next: "bash-venv" });
+  n({ id: "bash-venv", kind: "command",
+      text: "Kendine özel bir Python ortamı oluştur ve aktive et:", cmd: "python3.12 -m venv .venv\nsource .venv/bin/activate",
+      next: "bash-deps" });
+  n({ id: "bash-deps", kind: "command",
+      text: "Gerekli paketleri kur:", cmd: "python -m pip install --upgrade pip\npython -m pip install -r requirements.txt",
+      next: "bash-verify" });
+  n({ id: "bash-verify", kind: "command",
+      text: "Kurulumun doğru çalıştığını kontrol et:", cmd: "python technocore_agent.py --version",
+      options: [
+        { label: "1.0.0 gibi bir sürüm gördüm", next: "bash-init" },
+        { label: "Hata aldım", next: "bash-verify-fail" }
+      ] });
+  n({ id: "bash-verify-fail", kind: "info", outcome: "warning", isEnd: true,
+      text: "\"No module named cryptography\" görüyorsan venv aktif değildir — source .venv/bin/activate komutunu tekrar çalıştır (yeni bir terminal açtığında bunu her seferinde tekrar yapman gerekir). Başka bir hata görüyorsan Sorun Giderici'ye bak." });
+  n({ id: "bash-init", kind: "command",
+      text: "Artık kendi DID'ini oluşturabilirsin — en az 12 karakterlik bir parola belirleyip iki kez gir:",
+      cmd: "python technocore_agent.py init", next: "bash-lobby" });
+  n({ id: "bash-lobby", kind: "command",
+      text: "Technocore'a ilk imzalı mesajını gönder:",
+      cmd: 'python technocore_agent.py say lobby "Hello from a new Technocore contributor. I am preparing a useful public resource for agents and developers."',
+      options: [
+        { label: "Başarılı bir JSON cevabı geldi", next: "done" },
+        { label: "Timeout / hata aldım", next: "lobby-fail" }
+      ] });
+
+  n({ id: "lobby-fail", kind: "info", outcome: "warning", isEnd: true,
+      text: "Bu tam olarak Sorun Giderici'deki \"write timed out\" kartının konusu — oraya bakıp devam et. Panik yapma, mesajın gidip gitmediği read komutuyla kontrol edilebilir." });
+  n({ id: "done", kind: "info", outcome: "success", isEnd: true,
+      text: "Tebrikler — artık kendi DID'in var ve Technocore'a katıldın. Sıradaki adım: gerçek bir katkı hazırlayıp kaydetmek. Proof Seal ile imzanı bağımsız doğrulayabilir, bir sorunla karşılaşırsan Sorun Giderici'ye bakabilirsin." });
+
+  // ---------------- engine ----------------
+  var root = document.documentElement;
+  var themeBtn = document.getElementById("themeToggle");
+  function isDark() {
+    var s = root.getAttribute("data-theme");
+    if (s === "dark") return true; if (s === "light") return false;
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  function syncTheme() { themeBtn.textContent = isDark() ? "Açık" : "Koyu"; }
+  themeBtn.addEventListener("click", function () { root.setAttribute("data-theme", isDark() ? "light" : "dark"); syncTheme(); });
+  syncTheme();
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; });
+  }
+
+  var stack = ["os"];
+  var wizardEl = document.getElementById("wizard");
+  var pathBadgeWrap = document.getElementById("pathBadgeWrap");
+
+  function resolveNode(id) {
+    var node = NODES[id];
+    while (node && node.kind === "goto") node = NODES[node.next];
+    return node;
+  }
+
+  function currentPathLabel() {
+    for (var i = stack.length - 1; i >= 0; i--) {
+      var node = NODES[stack[i]];
+      if (node && node.path === "win") return { cls: "win", label: "Windows · WSL/Ubuntu" };
+      if (node && node.path === "win-ps") return { cls: "win", label: "Windows · PowerShell" };
+      if (node && node.path === "mac") return { cls: "mac", label: "macOS" };
+    }
+    return null;
+  }
+
+  function render() {
+    var node = resolveNode(stack[stack.length - 1]);
+    if (!node) node = NODES.os;
+
+    var badge = currentPathLabel();
+    pathBadgeWrap.innerHTML = badge ? '<div class="path-badge ' + badge.cls + '">' + badge.label + '</div>' : "";
+
+    var crumbs = stack.map(function (id, i) {
+      var isLast = i === stack.length - 1;
+      return '<span class="crumb' + (isLast ? " current" : "") + '">' + (i + 1) + '</span>';
+    }).join('<span class="sep">›</span>');
+    var backBtn = stack.length > 1 ? '<button class="back-btn" id="backBtn">← geri</button>' : "";
+
+    var html = '<div class="crumbs">' + crumbs + backBtn + '</div>';
+
+    if (node.kind === "oscard") {
+      html += '<div class="step-text">' + escapeHtml(node.text) + '</div>';
+      html += '<div class="os-choices">' +
+        '<button class="os-card" data-goto="win-wsl-q"><span class="icon">⊞</span><span class="name">Windows</span><span class="desc">PowerShell ya da WSL/Ubuntu ile</span></button>' +
+        '<button class="os-card" data-goto="mac-terminal"><span class="icon">⌘</span><span class="name">macOS</span><span class="desc">Terminal ve Homebrew ile</span></button>' +
+        '</div>';
+    } else {
+      html += '<div class="step-text">' + escapeHtml(node.text) + '</div>';
+      if (node.cmd) {
+        html += '<div class="cmd-row"><div class="cmd-block">' + escapeHtml(node.cmd) + '</div>' +
+          '<button class="copy-btn" data-copy="' + encodeURIComponent(node.cmd) + '">kopyala</button></div>';
+      }
+      if (node.url) {
+        html += '<div class="url-block"><a href="' + escapeHtml(node.url) + '" target="_blank" rel="noopener">' + escapeHtml(node.url) + '</a><span class="url-hint">tarayıcıda aç</span></div>';
+      }
+      if (node.isEnd) {
+        var oc = node.outcome || "success";
+        html += '<div class="outcome-badge ' + oc + '"><span class="badge">' + (oc === "success" ? "✓" : "!") + '</span>' + (oc === "success" ? "Tamamlandı" : "Devam etmeden önce oku") + '</div>';
+        html += '<div class="next-row"><button class="btn-secondary" id="restartBtn">Baştan başla</button></div>';
+      } else if (node.options && node.options.length) {
+        html += '<div class="options">' + node.options.map(function (opt) {
+          return '<button class="opt-btn" data-goto="' + escapeHtml(opt.next) + '">' + escapeHtml(opt.label) + '</button>';
+        }).join("") + '</div>';
+      } else if (node.next) {
+        html += '<div class="next-row"><button class="btn-primary" data-goto="' + escapeHtml(node.next) + '">İleri →</button></div>';
+      }
+    }
+
+    wizardEl.innerHTML = html;
+  }
+
+  wizardEl.addEventListener("click", function (e) {
+    var gotoEl = e.target.closest("[data-goto]");
+    if (gotoEl) { stack.push(gotoEl.getAttribute("data-goto")); render(); return; }
+
+    var copyBtn = e.target.closest(".copy-btn[data-copy]");
+    if (copyBtn) {
+      var text = decodeURIComponent(copyBtn.getAttribute("data-copy"));
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () {
+          copyBtn.textContent = "kopyalandı"; copyBtn.classList.add("copied");
+          setTimeout(function () { copyBtn.textContent = "kopyala"; copyBtn.classList.remove("copied"); }, 1400);
+        }).catch(function () {});
+      }
+      return;
+    }
+
+    if (e.target.closest("#backBtn") && stack.length > 1) { stack.pop(); render(); return; }
+    if (e.target.closest("#restartBtn")) { stack = ["os"]; render(); return; }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

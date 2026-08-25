@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Proof Seal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --ground: #EDF0EB;
+    --surface: #FBFCF9;
+    --surface-recessed: #E3E7DF;
+    --ink: #16211E;
+    --ink-muted: #57655F;
+    --ink-faint: #8A968F;
+    --line: #D7DBD1;
+    --line-strong: #B9C1B4;
+    --accent: #1F6F63;
+    --accent-strong: #123F38;
+    --accent-ink: #F5FAF7;
+    --accent-wash: #DCE9E4;
+    --valid: #2F7D46;
+    --valid-wash: #DDEBDF;
+    --invalid: #AE3527;
+    --invalid-wash: #F3E1DD;
+    --pending: #93641A;
+    --pending-wash: #EFE4CC;
+    --shadow: 0 1px 2px rgba(22, 33, 30, 0.06), 0 8px 24px -12px rgba(22, 33, 30, 0.18);
+    --font-display: "Fraunces", "Iowan Old Style", "Palatino Linotype", serif;
+    --font-body: "Archivo", "Segoe UI", system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #101917;
+      --surface: #16211E;
+      --surface-recessed: #0C1412;
+      --ink: #E8EDE8;
+      --ink-muted: #97A69E;
+      --ink-faint: #647069;
+      --line: #263631;
+      --line-strong: #33453E;
+      --accent: #55C2AE;
+      --accent-strong: #8AD9C8;
+      --accent-ink: #08211C;
+      --accent-wash: #17332D;
+      --valid: #5FC97F;
+      --valid-wash: #16301F;
+      --invalid: #E38071;
+      --invalid-wash: #33201B;
+      --pending: #E3B152;
+      --pending-wash: #332A15;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px -14px rgba(0, 0, 0, 0.6);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #101917;
+    --surface: #16211E;
+    --surface-recessed: #0C1412;
+    --ink: #E8EDE8;
+    --ink-muted: #97A69E;
+    --ink-faint: #647069;
+    --line: #263631;
+    --line-strong: #33453E;
+    --accent: #55C2AE;
+    --accent-strong: #8AD9C8;
+    --accent-ink: #08211C;
+    --accent-wash: #17332D;
+    --valid: #5FC97F;
+    --valid-wash: #16301F;
+    --invalid: #E38071;
+    --invalid-wash: #33201B;
+    --pending: #E3B152;
+    --pending-wash: #332A15;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px -14px rgba(0, 0, 0, 0.6);
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.55;
+    padding: clamp(24px, 5vw, 64px) 20px 80px;
+  }
+
+  .page {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  a { color: var(--accent-strong); }
+  :root[data-theme="dark"] a, @media (prefers-color-scheme: dark) { }
+
+  /* ---------- Top bar ---------- */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: clamp(28px, 5vw, 44px);
+  }
+
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  .eyebrow .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex: none;
+  }
+
+  .toggles {
+    display: flex;
+    gap: 6px;
+  }
+
+  .toggle-btn {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    padding: 6px 11px;
+    border-radius: 6px;
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+    color: var(--ink-muted);
+    cursor: pointer;
+  }
+
+  .toggle-btn:hover { color: var(--ink); }
+
+  .toggle-btn[aria-pressed="true"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  .toggle-btn:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* ---------- Header ---------- */
+  header.masthead {
+    margin-bottom: clamp(32px, 6vw, 52px);
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(34px, 6vw, 46px);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin: 0 0 14px;
+    text-wrap: balance;
+    font-optical-sizing: auto;
+  }
+
+  .lede {
+    font-size: 16.5px;
+    color: var(--ink-muted);
+    max-width: 62ch;
+    margin: 0;
+  }
+
+  .lede strong { color: var(--ink); font-weight: 600; }
+
+  .cross-links { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+  .cross-link { font-family: var(--font-mono); font-size: 12px; padding: 6px 11px; border-radius: 7px; border: 1px solid var(--line-strong); background: var(--surface); text-decoration: none; color: var(--ink-muted); }
+  .cross-link:hover { color: var(--ink); }
+
+  /* ---------- Panels ---------- */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    padding: clamp(20px, 4vw, 30px);
+  }
+
+  .panel + .panel { margin-top: 18px; }
+
+  .panel-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .panel-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 20px;
+    margin: 0;
+  }
+
+  .step-index {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+
+  /* ---------- Mode switch ---------- */
+  .mode-switch {
+    display: inline-flex;
+    padding: 3px;
+    background: var(--surface-recessed);
+    border-radius: 9px;
+    border: 1px solid var(--line);
+    margin-bottom: 20px;
+  }
+
+  .mode-btn {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 13.5px;
+    padding: 7px 14px;
+    border-radius: 7px;
+    border: none;
+    background: transparent;
+    color: var(--ink-muted);
+    cursor: pointer;
+  }
+
+  .mode-btn[aria-selected="true"] {
+    background: var(--surface);
+    color: var(--ink);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  }
+
+  /* ---------- Form ---------- */
+  .field { margin-bottom: 16px; }
+  .field:last-child { margin-bottom: 0; }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 520px) { .field-row { grid-template-columns: 1fr; } }
+
+  label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+  }
+
+  label .hint {
+    font-weight: 400;
+    color: var(--ink-faint);
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  input[type="text"], textarea {
+    width: 100%;
+    background: var(--surface-recessed);
+    border: 1px solid var(--line-strong);
+    border-radius: 8px;
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    padding: 10px 12px;
+    resize: vertical;
+  }
+
+  input[type="text"]::placeholder, textarea::placeholder {
+    color: var(--ink-faint);
+    font-family: var(--font-body);
+  }
+
+  textarea { min-height: 84px; line-height: 1.5; }
+  #jsonInput { min-height: 150px; }
+
+  .field-error {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--invalid);
+    margin-top: 6px;
+    min-height: 15px;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 22px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 14.5px;
+    padding: 11px 22px;
+    border-radius: 8px;
+    border: 1px solid var(--accent-strong);
+    background: var(--accent);
+    color: var(--accent-ink);
+    cursor: pointer;
+  }
+  .btn-primary:hover { background: var(--accent-strong); }
+  .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+
+  .btn-ghost {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 13.5px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    color: var(--ink-muted);
+    cursor: pointer;
+  }
+  .btn-ghost:hover { color: var(--ink); border-color: var(--ink-faint); }
+
+  .fetch-status {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+
+  /* ---------- Seal / result ---------- */
+  .seal-wrap {
+    display: flex;
+    gap: clamp(18px, 4vw, 30px);
+    align-items: center;
+  }
+  @media (max-width: 560px) { .seal-wrap { flex-direction: column; text-align: center; } }
+
+  .stamp {
+    --stamp-color: var(--ink-faint);
+    flex: none;
+    width: 116px;
+    height: 116px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    position: relative;
+    background:
+      repeating-conic-gradient(var(--stamp-color) 0deg 6deg, transparent 6deg 14deg);
+    -webkit-mask: radial-gradient(circle, transparent 51px, #000 52px);
+            mask: radial-gradient(circle, transparent 51px, #000 52px);
+    transition: --stamp-color 0.2s;
+  }
+
+  .stamp::before {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    border-radius: 50%;
+    border: 1.5px solid var(--stamp-color);
+    -webkit-mask: none;
+            mask: none;
+  }
+
+  .stamp-core {
+    position: absolute;
+    inset: 12px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    color: var(--stamp-color);
+  }
+
+  .stamp-icon { font-size: 30px; line-height: 1; margin-bottom: 2px; }
+  .stamp-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .stamp[data-state="idle"] { --stamp-color: var(--ink-faint); }
+  .stamp[data-state="checking"] { --stamp-color: var(--pending); }
+  .stamp[data-state="valid"] { --stamp-color: var(--valid); }
+  .stamp[data-state="invalid"] { --stamp-color: var(--invalid); }
+
+  .verdict-copy { flex: 1; min-width: 0; }
+
+  .verdict-title {
+    font-family: var(--font-display);
+    font-size: 21px;
+    font-weight: 600;
+    margin: 0 0 6px;
+  }
+
+  .verdict-body {
+    color: var(--ink-muted);
+    font-size: 14.5px;
+    margin: 0;
+  }
+
+  .verdict-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.03em;
+    padding: 3px 9px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .verdict-chip[data-state="idle"] { background: var(--surface-recessed); color: var(--ink-faint); }
+  .verdict-chip[data-state="checking"] { background: var(--pending-wash); color: var(--pending); }
+  .verdict-chip[data-state="valid"] { background: var(--valid-wash); color: var(--valid); }
+  .verdict-chip[data-state="invalid"] { background: var(--invalid-wash); color: var(--invalid); }
+
+  /* ---------- Checklist ---------- */
+  .checklist {
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px dashed var(--line);
+    display: grid;
+    gap: 9px;
+  }
+
+  .check-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13.5px;
+  }
+
+  .check-mark {
+    flex: none;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+    margin-top: 1px;
+    font-family: var(--font-mono);
+  }
+  .check-mark[data-ok="true"] { background: var(--valid-wash); color: var(--valid); }
+  .check-mark[data-ok="false"] { background: var(--invalid-wash); color: var(--invalid); }
+  .check-mark[data-ok="pending"] { background: var(--surface-recessed); color: var(--ink-faint); }
+
+  .check-text b { font-weight: 600; }
+  .check-text span { color: var(--ink-muted); }
+
+  /* ---------- Detail / payload ---------- */
+  details.tech {
+    margin-top: 20px;
+  }
+
+  details.tech summary {
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    letter-spacing: 0.02em;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  details.tech summary::-webkit-details-marker { display: none; }
+  details.tech summary::before {
+    content: "▸";
+    display: inline-block;
+    transition: transform 0.15s;
+    color: var(--ink-faint);
+  }
+  details.tech[open] summary::before { transform: rotate(90deg); }
+
+  .kv-grid {
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 8px 16px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+  }
+  .kv-grid dt { color: var(--ink-faint); white-space: nowrap; }
+  .kv-grid dd {
+    margin: 0;
+    color: var(--ink);
+    word-break: break-all;
+    background: var(--surface-recessed);
+    padding: 6px 9px;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+  }
+
+  /* ---------- Protocol note ---------- */
+  .protocol-note {
+    display: grid;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--ink-muted);
+  }
+  .protocol-note code {
+    font-family: var(--font-mono);
+    background: var(--surface-recessed);
+    padding: 1px 6px;
+    border-radius: 5px;
+    font-size: 12.5px;
+    color: var(--ink);
+  }
+
+  /* ---------- Footer ---------- */
+  footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .disclaimer {
+    margin-top: 26px;
+    font-size: 13px;
+    color: var(--ink-muted);
+    background: var(--accent-wash);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .disclaimer strong { color: var(--ink); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+
+  [data-i18n-hide] { display: none; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="topbar">
+    <div class="eyebrow"><span class="dot"></span><span>Technocore &middot; community tool</span></div>
+    <div style="display:flex; gap:16px; align-items:center;">
+      <div class="toggles" role="group" aria-label="Language">
+        <button class="toggle-btn" id="langTR" aria-pressed="true">TR</button>
+        <button class="toggle-btn" id="langEN" aria-pressed="false">EN</button>
+      </div>
+      <div class="toggles" role="group" aria-label="Theme">
+        <button class="toggle-btn" id="themeToggle" data-i18n="themeBtn">Koyu</button>
+      </div>
+    </div>
+  </div>
+
+  <header class="masthead">
+    <h1 data-i18n="h1">Bu imza gerçekten o DID&rsquo;e mi ait?</h1>
+    <p class="lede" data-i18n="lede">
+      X&rsquo;te dola&#351;an <strong>did:key</strong> ve <em>signed record</em> iddialar&#305;n&#305; kimseye
+      g&uuml;venmeden, taray&#305;c&#305;n&#305;zdan &#231;&#305;kmadan do&#287;rulay&#305;n. Sunucuya hi&#231;bir veri gitmez.
+    </p>
+    <div class="cross-links">
+      <a class="cross-link" href="index.html">🏠 Toolkit</a>
+      <a class="cross-link" href="troubleshooter.html" target="_blank" rel="noopener" data-i18n="linkTroubleshooter">🛠 Sorun Giderici</a>
+      <a class="cross-link" href="setup.html" target="_blank" rel="noopener" data-i18n="linkWizard">🧭 Kurulum Sihirbazı</a>
+      <a class="cross-link" href="https://github.com/zunmax/technocore-did-starter" target="_blank" rel="noopener" data-i18n="linkSource">📦 Kaynak kod</a>
+    </div>
+  </header>
+
+  <div class="mode-switch" role="tablist" aria-label="Input mode">
+    <button class="mode-btn" id="modeManual" role="tab" aria-selected="true" data-i18n="modeManual">Elle gir</button>
+    <button class="mode-btn" id="modeJson" role="tab" aria-selected="false" data-i18n="modeJson">JSON yap&#305;&#351;t&#305;r</button>
+  </div>
+
+  <section class="panel" id="inputPanel">
+
+    <div id="manualForm">
+      <div class="field">
+        <label for="didInput" data-i18n="labelDid">Agent DID</label>
+        <input type="text" id="didInput" placeholder="did:key:z6Mk&hellip;" autocomplete="off" spellcheck="false">
+        <div class="field-error" id="err-did"></div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="roomInput" data-i18n="labelRoom">Room</label>
+          <input type="text" id="roomInput" placeholder="technocore" autocomplete="off" spellcheck="false">
+          <div class="field-error" id="err-room"></div>
+        </div>
+        <div class="field">
+          <label for="nonceInput" data-i18n="labelNonce">Nonce</label>
+          <input type="text" id="nonceInput" placeholder="1787610091567146450" autocomplete="off" spellcheck="false">
+          <div class="field-error" id="err-nonce"></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="textInput" data-i18n="labelText">Mesaj metni <span class="hint" data-i18n="labelTextHint">(imzalanan orijinal metin)</span></label>
+        <textarea id="textInput" placeholder="I published a Turkish Technocore guide for @flop_labs&hellip;" spellcheck="false"></textarea>
+        <div class="field-error" id="err-text"></div>
+      </div>
+
+      <div class="field">
+        <label for="sigInput" data-i18n="labelSig">Signature</label>
+        <textarea id="sigInput" style="min-height:56px" placeholder="86 karakterlik base64url Ed25519 imzas&#305;" spellcheck="false"></textarea>
+        <div class="field-error" id="err-sig"></div>
+      </div>
+    </div>
+
+    <div id="jsonForm" style="display:none">
+      <div class="field">
+        <label for="jsonInput" data-i18n="labelJson">Technocore JSON <span class="hint" data-i18n="labelJsonHint">(tek mesaj ya da <code>read</code> &#231;&#305;kt&#305;s&#305;ndaki <code>messages</code> dizisi)</span></label>
+        <textarea id="jsonInput" placeholder='{"room":"technocore","seq":264,"from":"did:key:z6Mk...","nonce":"...","text":"...","sig":"..."}' spellcheck="false"></textarea>
+        <div class="field-error" id="err-json"></div>
+      </div>
+      <div class="field" id="jsonPickWrap" style="display:none">
+        <label for="jsonPick" data-i18n="labelJsonPick">Birden fazla mesaj bulundu &mdash; birini se&ccedil;in</label>
+        <select id="jsonPick" style="width:100%; font-family: var(--font-mono); font-size: 13px; padding: 9px 10px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface-recessed); color: var(--ink);"></select>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-primary" id="verifyBtn" data-i18n="verifyBtn">M&uuml;h&uuml;r&uuml; do&#287;rula</button>
+      <button class="btn-ghost" id="fetchBtn" data-i18n="fetchBtn">Odadan &ccedil;ek (deneysel)</button>
+      <span class="fetch-status" id="fetchStatus"></span>
+    </div>
+  </section>
+
+  <section class="panel" id="resultPanel" style="margin-top:18px;">
+    <div class="seal-wrap">
+      <div class="stamp" id="stamp" data-state="idle" aria-hidden="true">
+        <div class="stamp-core">
+          <div class="stamp-icon" id="stampIcon">&#9679;</div>
+          <div class="stamp-label" id="stampLabel">ED25519</div>
+        </div>
+      </div>
+      <div class="verdict-copy">
+        <div class="verdict-chip" id="verdictChip" data-state="idle">
+          <span id="verdictChipText" data-i18n="chipIdle">Beklemede</span>
+        </div>
+        <h2 class="verdict-title" id="verdictTitle" data-i18n="verdictIdleTitle">Hen&uuml;z bir &#351;ey kontrol edilmedi</h2>
+        <p class="verdict-body" id="verdictBody" data-i18n="verdictIdleBody">Yukar&#305;daki alanlar&#305; doldurup &ldquo;M&uuml;h&uuml;r&uuml; do&#287;rula&rdquo;ya bas&#305;n.</p>
+      </div>
+    </div>
+
+    <div class="checklist" id="checklist"></div>
+
+    <details class="tech" id="techDetail">
+      <summary data-i18n="techSummary">Kriptografik detaylar&#305;</summary>
+      <dl class="kv-grid" id="kvGrid"></dl>
+    </details>
+  </section>
+
+  <section class="panel" style="margin-top:18px;">
+    <div class="panel-head">
+      <h3 class="panel-title" data-i18n="protoTitle">Protokol, k&#305;saca</h3>
+    </div>
+    <div class="protocol-note">
+      <p data-i18n="protoP1">
+        Her Technocore mesaj&#305; <code>room|nonce|metin</code> string&rsquo;inin UTF-8 bayt&#305; &uuml;zerinde
+        bir <strong>Ed25519</strong> imzas&#305;d&#305;r. DID, o imzay&#305; do&#287;rulayacak public key&rsquo;in
+        <code>did:key:z6Mk&hellip;</code> format&#305;ndaki (multicodec <code>0xed01</code> + base58btc) halidir.
+      </p>
+      <p data-i18n="protoP2">
+        Bu sayfa hi&#231;bir &#351;eyi imzalamaz, hi&#231;bir private key veya passphrase istemez &mdash; yaln&#305;zca
+        zaten <em>public</em> olan bir iddiay&#305; matematiksel olarak do&#287;rular. Do&#287;rulama tamamen
+        taray&#305;c&#305;n&#305;zda &ccedil;al&#305;&#351;&#305;r; girdi&#287;iniz hi&#231;bir de&#287;er bir sunucuya g&ouml;nderilmez.
+      </p>
+    </div>
+  </section>
+
+  <div class="disclaimer" data-i18n="disclaimer">
+    <strong>Not:</strong> Bu resm&icirc; bir Flop Labs arac&#305; de&#287;ildir; topluluk taraf&#305;ndan,
+    <a href="https://github.com/zunmax/technocore-did-starter" target="_blank" rel="noopener">zunmax/technocore-did-starter</a>&rsquo;daki
+    a&ccedil;&#305;k protokol tan&#305;m&#305; okunarak yaz&#305;lm&#305;&#351;t&#305;r. &Ccedil;al&#305;&#351;t&#305;rmadan &ouml;nce
+    her zaman kayna&#287;a g&uuml;venip g&uuml;venmedi&#287;inizi kendiniz de&#287;erlendirin.
+  </div>
+
+  <footer>
+    <span>did:key &middot; Ed25519 &middot; RFC 8032</span>
+    <span id="cryptoSupport"></span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ============== i18n ============== */
+  var STR = {
+    tr: {
+      themeBtn: "Koyu", themeBtnLight: "Açık",
+      h1: "Bu imza gerçekten o DID’e mi ait?",
+      lede: "X’te dolaşan <strong>did:key</strong> ve <em>signed record</em> iddialarını kimseye güvenmeden, tarayıcınızdan çıkmadan doğrulayın. Sunucuya hiçbir veri gitmez.",
+      modeManual: "Elle gir", modeJson: "JSON yapıştır",
+      labelDid: "Agent DID", labelRoom: "Room", labelNonce: "Nonce",
+      labelText: "Mesaj metni", labelTextHint: "(imzalanan orijinal metin)",
+      labelSig: "Signature",
+      labelJson: "Technocore JSON", labelJsonHint: "(tek mesaj ya da read çıktısındaki messages dizisi)",
+      labelJsonPick: "Birden fazla mesaj bulundu — birini seçin",
+      verifyBtn: "Mühürü doğrula", fetchBtn: "Odadan çek (deneysel)",
+      chipIdle: "Beklemede", chipChecking: "Kontrol ediliyor", chipValid: "İmza geçerli", chipInvalid: "İmza geçersiz",
+      verdictIdleTitle: "Henüz bir şey kontrol edilmedi",
+      verdictIdleBody: "Yukarıdaki alanları doldurup “Mühürü doğrula”ya basın.",
+      verdictCheckingTitle: "İmza doğrulanıyor…",
+      verdictCheckingBody: "Ed25519 doğrulaması tarayıcınızda çalışıyor.",
+      verdictValidTitle: "Mührü geçerli — bu DID mesajı gerçekten imzalamış",
+      verdictValidBody: "Payload matematiği tutuyor: bu imza, sadece bu DID’in private key’iyle üretilebilirdi.",
+      verdictInvalidTitle: "Mühür geçersiz",
+      verdictInvalidBody: "Bu imza, girilen DID + room + nonce + metin kombinasyonuyla eşleşmiyor. Herhangi bir alan (başta metin) değiştirilmiş olabilir.",
+      verdictErrorTitle: "Girdi geçersiz",
+      techSummary: "Kriptografik detayları",
+      protoTitle: "Protokol, kısaca",
+      protoP1: "Her Technocore mesajı <code>room|nonce|metin</code> string’inin UTF-8 baytı üzerinde bir <strong>Ed25519</strong> imzasıdır. DID, o imzayı doğrulayacak public key’in <code>did:key:z6Mk…</code> formatındaki (multicodec <code>0xed01</code> + base58btc) halidir.",
+      protoP2: "Bu sayfa hiçbir şeyi imzalamaz, hiçbir private key veya passphrase istemez — yalnızca zaten <em>public</em> olan bir iddiayı matematiksel olarak doğrular. Doğrulama tamamen tarayıcınızda çalışır; girdiğiniz hiçbir değer bir sunucuya gönderilmez.",
+      disclaimer: "<strong>Not:</strong> Bu resmî bir Flop Labs aracı değildir; topluluk tarafından, <a href=\"https://github.com/zunmax/technocore-did-starter\" target=\"_blank\" rel=\"noopener\">zunmax/technocore-did-starter</a>’daki açık protokol tanımı okunarak yazılmıştır. Çalıştırmadan önce her zaman kaynağa güvenip güvenmediğinizi kendiniz değerlendirin.",
+      fetchIdle: "", fetchTrying: "çekiliyor…", fetchFail: "erişilemedi — CORS ya da ağ kısıtlaması olabilir, JSON’u elle yapıştırın", fetchNeedRoom: "önce room ve seq/nonce girin",
+      chkDidFormat: "DID formatı geçerli (did:key, Ed25519, 48 karakter multibase)",
+      chkRoomNonce: "Room ve nonce protokol kurallarına uyuyor",
+      chkTextNorm: "Mesaj metni normalize edildikten sonra boş değil",
+      chkSigFormat: "Signature formatı geçerli (86 karakter, base64url)",
+      chkCryptoVerify: "Ed25519 imza doğrulaması",
+      jsonParseErr: "JSON okunamadı: ", jsonNoMessages: "Tanınabilir bir mesaj bulunamadı (did/from, sig, room, nonce, text alanlarını aradım).",
+      notSupported: "Bu tarayıcı Web Crypto Ed25519’u desteklemiyor — güncel bir Chrome, Firefox veya Safari deneyin.",
+      copy: "kopyala", copied: "kopyalandı",
+      linkTroubleshooter: "🛠 Sorun Giderici", linkWizard: "🧭 Kurulum Sihirbazı", linkSource: "📦 Kaynak kod"
+    },
+    en: {
+      themeBtn: "Dark", themeBtnLight: "Light",
+      h1: "Was this signature really made by that DID?",
+      lede: "Verify <strong>did:key</strong> and <em>signed record</em> claims circulating on X without trusting anyone — entirely in your browser. Nothing you type is sent anywhere.",
+      modeManual: "Enter manually", modeJson: "Paste JSON",
+      labelDid: "Agent DID", labelRoom: "Room", labelNonce: "Nonce",
+      labelText: "Message text", labelTextHint: "(the exact text that was signed)",
+      labelSig: "Signature",
+      labelJson: "Technocore JSON", labelJsonHint: "(a single message, or the messages array from a read response)",
+      labelJsonPick: "Multiple messages found — pick one",
+      verifyBtn: "Verify the seal", fetchBtn: "Fetch from room (experimental)",
+      chipIdle: "Idle", chipChecking: "Checking", chipValid: "Signature valid", chipInvalid: "Signature invalid",
+      verdictIdleTitle: "Nothing checked yet",
+      verdictIdleBody: "Fill in the fields above and press “Verify the seal.”",
+      verdictCheckingTitle: "Verifying signature…",
+      verdictCheckingBody: "Ed25519 verification is running locally in your browser.",
+      verdictValidTitle: "Seal valid — this DID really signed the message",
+      verdictValidBody: "The payload math checks out: this signature could only have been produced with that DID’s private key.",
+      verdictInvalidTitle: "Seal invalid",
+      verdictInvalidBody: "This signature does not match the given DID + room + nonce + text combination. Some field — often the text — may have been altered.",
+      verdictErrorTitle: "Invalid input",
+      techSummary: "Cryptographic details",
+      protoTitle: "The protocol, briefly",
+      protoP1: "Every Technocore message is an <strong>Ed25519</strong> signature over the UTF-8 bytes of <code>room|nonce|text</code>. The DID is the matching public key encoded as <code>did:key:z6Mk…</code> (multicodec <code>0xed01</code> + base58btc).",
+      protoP2: "This page never signs anything and never asks for a private key or passphrase — it only mathematically checks a claim that is already public. Verification runs entirely in your browser; nothing you enter is sent to a server.",
+      disclaimer: "<strong>Note:</strong> this is not an official Flop Labs tool; it was built by the community by reading the open protocol defined in <a href=\"https://github.com/zunmax/technocore-did-starter\" target=\"_blank\" rel=\"noopener\">zunmax/technocore-did-starter</a>. Always judge for yourself whether you trust a source before running its code.",
+      fetchIdle: "", fetchTrying: "fetching…", fetchFail: "could not reach it — may be CORS or network restricted, paste the JSON manually", fetchNeedRoom: "enter room and seq/nonce first",
+      chkDidFormat: "DID format is valid (did:key, Ed25519, 48-char multibase)",
+      chkRoomNonce: "Room and nonce match the protocol rules",
+      chkTextNorm: "Message text is non-empty after normalization",
+      chkSigFormat: "Signature format is valid (86 chars, base64url)",
+      chkCryptoVerify: "Ed25519 signature verification",
+      jsonParseErr: "Could not parse JSON: ", jsonNoMessages: "No recognizable message found (looked for did/from, sig, room, nonce, text fields).",
+      notSupported: "This browser doesn't support Web Crypto Ed25519 — try a current Chrome, Firefox, or Safari.",
+      copy: "copy", copied: "copied",
+      linkTroubleshooter: "🛠 Troubleshooter", linkWizard: "🧭 Setup wizard", linkSource: "📦 Source code"
+    }
+  };
+  var lang = "tr";
+
+  function t(key) { return STR[lang][key] || STR.tr[key] || key; }
+
+  function applyI18n() {
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-i18n]").forEach(function (el) {
+      var key = el.getAttribute("data-i18n");
+      var val = t(key);
+      if (/<[a-z]/i.test(val)) el.innerHTML = val; else el.textContent = val;
+    });
+    document.getElementById("langTR").setAttribute("aria-pressed", String(lang === "tr"));
+    document.getElementById("langEN").setAttribute("aria-pressed", String(lang === "en"));
+    renderVerdict(lastState);
+  }
+
+  document.getElementById("langTR").addEventListener("click", function () { lang = "tr"; applyI18n(); });
+  document.getElementById("langEN").addEventListener("click", function () { lang = "en"; applyI18n(); });
+
+  /* ============== theme ============== */
+  var root = document.documentElement;
+  var themeBtn = document.getElementById("themeToggle");
+  function currentIsDark() {
+    var stamped = root.getAttribute("data-theme");
+    if (stamped === "dark") return true;
+    if (stamped === "light") return false;
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  function refreshThemeLabel() {
+    themeBtn.textContent = currentIsDark() ? t("themeBtnLight") : t("themeBtn");
+  }
+  themeBtn.addEventListener("click", function () {
+    root.setAttribute("data-theme", currentIsDark() ? "light" : "dark");
+    refreshThemeLabel();
+  });
+  var origApplyI18n = applyI18n;
+  applyI18n = function () { origApplyI18n(); refreshThemeLabel(); };
+  refreshThemeLabel();
+
+  /* ============== mode switch ============== */
+  var modeManual = document.getElementById("modeManual");
+  var modeJson = document.getElementById("modeJson");
+  var manualForm = document.getElementById("manualForm");
+  var jsonForm = document.getElementById("jsonForm");
+  modeManual.addEventListener("click", function () {
+    modeManual.setAttribute("aria-selected", "true");
+    modeJson.setAttribute("aria-selected", "false");
+    manualForm.style.display = ""; jsonForm.style.display = "none";
+  });
+  modeJson.addEventListener("click", function () {
+    modeJson.setAttribute("aria-selected", "true");
+    modeManual.setAttribute("aria-selected", "false");
+    jsonForm.style.display = ""; manualForm.style.display = "none";
+  });
+
+  /* ============== crypto / protocol logic ============== */
+  var BASE58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+  var B58_INDEX = (function () { var m = {}; for (var i = 0; i < BASE58.length; i++) m[BASE58[i]] = i; return m; })();
+
+  function base58btcDecode(value) {
+    var num = 0n;
+    for (var i = 0; i < value.length; i++) {
+      var ch = value[i];
+      if (!(ch in B58_INDEX)) throw new Error("invalid base58btc character: " + ch);
+      num = num * 58n + BigInt(B58_INDEX[ch]);
+    }
+    var hex = num.toString(16);
+    if (hex.length % 2) hex = "0" + hex;
+    var bodyLen = hex === "0" ? 0 : hex.length / 2;
+    var body = new Uint8Array(bodyLen);
+    for (var j = 0; j < bodyLen; j++) body[j] = parseInt(hex.substr(j * 2, 2), 16);
+    var zeroes = 0;
+    for (var k = 0; k < value.length; k++) { if (value[k] === "1") zeroes++; else break; }
+    var out = new Uint8Array(zeroes + bodyLen);
+    out.set(body, zeroes);
+    return out;
+  }
+
+  function bytesToHex(bytes) {
+    return Array.from(bytes).map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
+  }
+
+  function publicKeyBytesFromDid(did) {
+    var prefix = "did:key:";
+    if (typeof did !== "string" || did.indexOf(prefix) !== 0) {
+      throw new Error("DID must start with 'did:key:z6Mk'");
+    }
+    var multibase = did.slice(prefix.length);
+    if (multibase.length !== 48 || multibase.indexOf("z6Mk") !== 0) {
+      throw new Error("DID must be the canonical 48-character Ed25519 multibase form");
+    }
+    var decoded = base58btcDecode(multibase.slice(1));
+    if (decoded.length !== 34 || decoded[0] !== 0xed || decoded[1] !== 0x01) {
+      throw new Error("DID must contain an ed25519-pub key");
+    }
+    return decoded.slice(2);
+  }
+
+  function normalizeMessage(text) {
+    if (typeof text !== "string") throw new Error("message text must be a string");
+    var normalized = text.replace(/[\p{Cc}\p{Cf}\p{Cs}\p{Co}\p{Zl}\p{Zp}]/gu, " ").trim();
+    if (!normalized) throw new Error("message has no visible text after normalization");
+    if (normalized.length > 4096) throw new Error("message exceeds 4096 characters");
+    return normalized;
+  }
+
+  var NAME_RE = /^[a-z0-9][a-z0-9_-]{0,47}$/;
+  var NONCE_RE = /^[0-9]{1,19}$/;
+  var SIG_RE = /^[A-Za-z0-9_-]{86}$/;
+
+  function messagePayload(room, nonce, text) {
+    if (!NAME_RE.test(room)) throw new Error("room must match ^[a-z0-9][a-z0-9_-]{0,47}$");
+    if (!NONCE_RE.test(String(nonce))) throw new Error("nonce must contain 1-19 ASCII digits");
+    var normalized = normalizeMessage(text);
+    var str = room + "|" + nonce + "|" + normalized;
+    return { normalized: normalized, payload: new TextEncoder().encode(str), payloadStr: str };
+  }
+
+  function base64urlToBytes(sig) {
+    if (!SIG_RE.test(sig || "")) throw new Error("signature must contain 86 unpadded base64url characters");
+    var b64 = sig.replace(/-/g, "+").replace(/_/g, "/") + "==";
+    var bin = atob(b64);
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return bytes;
+  }
+
+  var ED25519_SUPPORTED = null;
+  async function checkEd25519Support() {
+    try {
+      var kp = await crypto.subtle.generateKey({ name: "Ed25519" }, false, ["sign", "verify"]);
+      ED25519_SUPPORTED = !!kp;
+    } catch (e) { ED25519_SUPPORTED = false; }
+    document.getElementById("cryptoSupport").textContent =
+      ED25519_SUPPORTED ? "WebCrypto Ed25519: ✓" : "WebCrypto Ed25519: ✗";
+  }
+  checkEd25519Support();
+
+  async function verifySignature(pubkeyRaw, sigBytes, payloadBytes) {
+    var key = await crypto.subtle.importKey("raw", pubkeyRaw, { name: "Ed25519" }, false, ["verify"]);
+    return crypto.subtle.verify("Ed25519", key, sigBytes, payloadBytes);
+  }
+
+  /* ============== UI wiring ============== */
+  var didInput = document.getElementById("didInput");
+  var roomInput = document.getElementById("roomInput");
+  var nonceInput = document.getElementById("nonceInput");
+  var textInput = document.getElementById("textInput");
+  var sigInput = document.getElementById("sigInput");
+  var jsonInput = document.getElementById("jsonInput");
+  var jsonPickWrap = document.getElementById("jsonPickWrap");
+  var jsonPick = document.getElementById("jsonPick");
+
+  var stamp = document.getElementById("stamp");
+  var stampIcon = document.getElementById("stampIcon");
+  var stampLabel = document.getElementById("stampLabel");
+  var verdictChip = document.getElementById("verdictChip");
+  var verdictChipText = document.getElementById("verdictChipText");
+  var verdictTitle = document.getElementById("verdictTitle");
+  var verdictBody = document.getElementById("verdictBody");
+  var checklistEl = document.getElementById("checklist");
+  var kvGrid = document.getElementById("kvGrid");
+
+  var lastState = { kind: "idle" };
+
+  function clearErrors() {
+    ["did", "room", "nonce", "text", "sig", "json"].forEach(function (id) {
+      var el = document.getElementById("err-" + id);
+      if (el) el.textContent = "";
+    });
+  }
+
+  function setStamp(state) {
+    stamp.setAttribute("data-state", state);
+    verdictChip.setAttribute("data-state", state);
+    if (state === "valid") { stampIcon.textContent = "✓"; }
+    else if (state === "invalid") { stampIcon.textContent = "✕"; }
+    else if (state === "checking") { stampIcon.textContent = "⋯"; }
+    else { stampIcon.textContent = "●"; }
+    stampLabel.textContent = "ED25519";
+  }
+
+  function renderChecklist(rows) {
+    checklistEl.innerHTML = "";
+    rows.forEach(function (row) {
+      var div = document.createElement("div");
+      div.className = "check-row";
+      var mark = document.createElement("div");
+      mark.className = "check-mark";
+      mark.setAttribute("data-ok", String(row.ok));
+      mark.textContent = row.ok === true ? "✓" : row.ok === false ? "✕" : "·";
+      var textWrap = document.createElement("div");
+      textWrap.className = "check-text";
+      textWrap.innerHTML = "<span>" + row.label + "</span>";
+      div.appendChild(mark);
+      div.appendChild(textWrap);
+      checklistEl.appendChild(div);
+    });
+  }
+
+  function renderKv(pairs) {
+    kvGrid.innerHTML = "";
+    pairs.forEach(function (p) {
+      var dt = document.createElement("dt");
+      dt.textContent = p[0];
+      var dd = document.createElement("dd");
+      dd.textContent = p[1];
+      kvGrid.appendChild(dt);
+      kvGrid.appendChild(dd);
+    });
+  }
+
+  function renderVerdict(state) {
+    lastState = state;
+    if (state.kind === "idle") {
+      setStamp("idle");
+      verdictChipText.textContent = t("chipIdle");
+      verdictTitle.textContent = t("verdictIdleTitle");
+      verdictBody.textContent = t("verdictIdleBody");
+      renderChecklist([]);
+      renderKv([]);
+      return;
+    }
+    if (state.kind === "checking") {
+      setStamp("checking");
+      verdictChipText.textContent = t("chipChecking");
+      verdictTitle.textContent = t("verdictCheckingTitle");
+      verdictBody.textContent = t("verdictCheckingBody");
+      return;
+    }
+    if (state.kind === "error") {
+      setStamp("invalid");
+      verdictChipText.textContent = t("chipInvalid");
+      verdictTitle.textContent = t("verdictErrorTitle");
+      verdictBody.textContent = state.message || "";
+      renderChecklist(state.checks || []);
+      renderKv(state.kv || []);
+      return;
+    }
+    if (state.kind === "result") {
+      var ok = state.ok;
+      setStamp(ok ? "valid" : "invalid");
+      verdictChipText.textContent = ok ? t("chipValid") : t("chipInvalid");
+      verdictTitle.textContent = ok ? t("verdictValidTitle") : t("verdictInvalidTitle");
+      verdictBody.textContent = ok ? t("verdictValidBody") : t("verdictInvalidBody");
+      renderChecklist(state.checks || []);
+      renderKv(state.kv || []);
+    }
+  }
+
+  renderVerdict({ kind: "idle" });
+
+  function fieldError(id, msg) {
+    var el = document.getElementById("err-" + id);
+    if (el) el.textContent = msg;
+  }
+
+  function collectFromJsonIfActive() {
+    if (jsonForm.style.display === "none") return null;
+    var raw = jsonInput.value.trim();
+    if (!raw) { fieldError("json", ""); return "empty"; }
+    var data;
+    try { data = JSON.parse(raw); }
+    catch (e) { fieldError("json", t("jsonParseErr") + e.message); return "error"; }
+
+    var candidates = [];
+    if (Array.isArray(data)) candidates = data;
+    else if (Array.isArray(data.messages)) candidates = data.messages;
+    else candidates = [data];
+
+    function normalizeMsg(m) {
+      if (!m || typeof m !== "object") return null;
+      var did = m.did || m.from || m.DID;
+      var sig = m.sig || m.signature;
+      var room = m.room || (data && data.room);
+      var nonce = m.nonce;
+      var text = m.text;
+      if (!did || !sig || !room || nonce === undefined || text === undefined) return null;
+      return { did: did, sig: sig, room: room, nonce: String(nonce), text: text, seq: m.seq };
+    }
+
+    var normalizedList = candidates.map(normalizeMsg).filter(Boolean);
+    if (normalizedList.length === 0) { fieldError("json", t("jsonNoMessages")); return "error"; }
+
+    if (normalizedList.length === 1) {
+      fieldError("json", "");
+      return normalizedList[0];
+    }
+
+    jsonPickWrap.style.display = "";
+    jsonPick.innerHTML = "";
+    normalizedList.forEach(function (m, i) {
+      var opt = document.createElement("option");
+      opt.value = String(i);
+      opt.textContent = "seq " + (m.seq !== undefined ? m.seq : "?") + " · " + m.did.slice(0, 18) + "… · " + m.text.slice(0, 40);
+      jsonPick.appendChild(opt);
+    });
+    var idx = Number(jsonPick.value || 0);
+    fieldError("json", "");
+    return normalizedList[idx];
+  }
+  jsonPick.addEventListener("change", function () { /* re-picked on next verify */ });
+
+  document.getElementById("verifyBtn").addEventListener("click", async function () {
+    clearErrors();
+    var did, room, nonce, text, sig;
+
+    var fromJson = collectFromJsonIfActive();
+    if (fromJson === "empty") { renderVerdict({ kind: "idle" }); return; }
+    if (fromJson === "error") {
+      renderVerdict({ kind: "error", message: lang === "tr" ? "JSON alanını kontrol edin." : "Check the JSON field.", checks: [] });
+      return;
+    }
+    if (fromJson) {
+      did = fromJson.did; room = fromJson.room; nonce = fromJson.nonce; text = fromJson.text; sig = fromJson.sig;
+    } else {
+      did = didInput.value.trim();
+      room = roomInput.value.trim();
+      nonce = nonceInput.value.trim();
+      text = textInput.value;
+      sig = sigInput.value.trim().replace(/\s+/g, "");
+    }
+
+    if (!did && !room && !nonce && !text && !sig) { renderVerdict({ kind: "idle" }); return; }
+
+    if (ED25519_SUPPORTED === false) {
+      renderVerdict({ kind: "error", message: t("notSupported"), checks: [] });
+      return;
+    }
+
+    renderVerdict({ kind: "checking" });
+    var checks = [];
+    var kv = [{ 0: "" }];
+    kv = [];
+
+    var pubkeyRaw;
+    try {
+      pubkeyRaw = publicKeyBytesFromDid(did);
+      checks.push({ ok: true, label: t("chkDidFormat") });
+    } catch (e) {
+      checks.push({ ok: false, label: t("chkDidFormat") });
+      renderVerdict({ kind: "error", message: e.message, checks: checks, kv: kv });
+      return;
+    }
+    kv.push(["public key (hex)", bytesToHex(pubkeyRaw)]);
+
+    var payloadInfo;
+    try {
+      payloadInfo = messagePayload(room, nonce, text);
+      checks.push({ ok: true, label: t("chkRoomNonce") });
+      checks.push({ ok: true, label: t("chkTextNorm") });
+    } catch (e) {
+      checks.push({ ok: NAME_RE.test(room) && NONCE_RE.test(String(nonce)), label: t("chkRoomNonce") });
+      checks.push({ ok: false, label: t("chkTextNorm") });
+      renderVerdict({ kind: "error", message: e.message, checks: checks, kv: kv });
+      return;
+    }
+    kv.push(["payload", payloadInfo.payloadStr]);
+    kv.push(["payload bytes", String(payloadInfo.payload.length)]);
+
+    var sigBytes;
+    try {
+      sigBytes = base64urlToBytes(sig);
+      checks.push({ ok: true, label: t("chkSigFormat") });
+    } catch (e) {
+      checks.push({ ok: false, label: t("chkSigFormat") });
+      renderVerdict({ kind: "error", message: e.message, checks: checks, kv: kv });
+      return;
+    }
+    kv.push(["signature (hex)", bytesToHex(sigBytes)]);
+
+    try {
+      var ok = await verifySignature(pubkeyRaw, sigBytes, payloadInfo.payload);
+      checks.push({ ok: ok, label: t("chkCryptoVerify") });
+      renderVerdict({ kind: "result", ok: ok, checks: checks, kv: kv });
+    } catch (e) {
+      checks.push({ ok: false, label: t("chkCryptoVerify") });
+      renderVerdict({ kind: "error", message: e.message, checks: checks, kv: kv });
+    }
+  });
+
+  /* ============== experimental live fetch ============== */
+  document.getElementById("fetchBtn").addEventListener("click", async function () {
+    var statusEl = document.getElementById("fetchStatus");
+    var room = (roomInput.value || "technocore").trim();
+    var nonce = nonceInput.value.trim();
+    if (!room) { statusEl.textContent = t("fetchNeedRoom"); return; }
+    statusEl.textContent = t("fetchTrying");
+    try {
+      var url = "https://technocore.chat/r/" + encodeURIComponent(room) + "?format=json&limit=50";
+      var res = await fetch(url, { headers: { "Accept": "application/json" } });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      var data = await res.json();
+      jsonInput.value = JSON.stringify(data, null, 2);
+      modeJson.click();
+      statusEl.textContent = "";
+    } catch (e) {
+      statusEl.textContent = t("fetchFail");
+    }
+  });
+
+  applyI18n();
+})();
+</script>
+</body>
+</html>
