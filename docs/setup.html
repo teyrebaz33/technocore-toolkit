@@ -68,8 +68,11 @@
   header.masthead { padding: clamp(26px, 5vw, 44px) 0 20px; }
   .eyebrow { display: flex; align-items: center; gap: 9px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 14px; }
   .eyebrow .tab { width: 18px; height: 10px; border-radius: 2px; background: var(--accent); flex: none; }
-  .top-actions { margin-left: auto; display: flex; gap: 6px; }
+  .top-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .toggles { display: flex; gap: 4px; }
   .toggle-btn { font-family: var(--font-mono); font-size: 11.5px; padding: 5px 10px; border-radius: 6px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink-muted); cursor: pointer; }
+  .toggle-btn:hover { color: var(--ink); }
+  .toggle-btn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
   .toggle-btn:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
   h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 5.2vw, 40px); line-height: 1.1; margin: 0 0 12px; text-wrap: balance; }
@@ -143,32 +146,39 @@
 
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
+
 </head>
 <body>
 <div class="wrap">
   <header class="masthead">
     <div class="eyebrow">
       <span class="tab"></span><span>Technocore &middot; topluluk kaynağı</span>
-      <span class="top-actions"><button class="toggle-btn" id="themeToggle">Koyu</button></span>
+      <span class="top-actions">
+        <span class="toggles" role="group" aria-label="Language">
+          <button class="toggle-btn" id="langTR" aria-pressed="true">TR</button>
+          <button class="toggle-btn" id="langEN" aria-pressed="false">EN</button>
+        </span>
+        <button class="toggle-btn" id="themeToggle" data-i18n="themeBtn">Koyu</button>
+      </span>
     </div>
-    <h1>Sıfırdan Technocore kurulumu</h1>
-    <p class="lede">
+    <h1 data-i18n="h1">Sıfırdan Technocore kurulumu</h1>
+    <p class="lede" data-i18n="lede">
       İşletim sistemine g&ouml;re, terminalinden ba&#351;layarak <strong>tek tek</strong> seni y&ouml;nlendiren bir
       sihirbaz. &Ouml;nce gerekli program varsa kuruyoruz, sonra zunmax'&#305;n arac&#305;n&#305; kurup ilk DID'ini
       olu&#351;turuyoruz. Her komutta kopyala butonu var, hi&ccedil;bir yerde private key veya parolan bizden ge&ccedil;miyor.
     </p>
     <div class="cross-links">
-      <a class="cross-link" href="index.html">🏠 Toolkit ana sayfası</a>
-      <a class="cross-link" href="troubleshooter.html" target="_blank" rel="noopener">🛠 Sorun Giderici</a>
-      <a class="cross-link" href="proof-seal.html" target="_blank" rel="noopener">🔏 Proof Seal (imza doğrulayıcı)</a>
-      <a class="cross-link" href="https://github.com/zunmax/technocore-did-starter" target="_blank" rel="noopener">📦 Kaynak kod</a>
+            <a class="cross-link" href="index.html">🏠 Toolkit ana sayfası</a>
+<a class="cross-link" href="troubleshooter.html" target="_blank" rel="noopener" data-i18n="linkTroubleshooter">🛠 Sorun Giderici</a>
+      <a class="cross-link" href="proof-seal.html" target="_blank" rel="noopener" data-i18n="linkProof">🔏 Proof Seal (imza doğrulayıcı)</a>
+      <a class="cross-link" href="https://github.com/zunmax/technocore-did-starter" target="_blank" rel="noopener" data-i18n="linkSource">📦 Kaynak kod</a>
     </div>
     <div id="pathBadgeWrap"></div>
   </header>
 
   <div class="wizard" id="wizard"></div>
 
-  <div class="about-note">
+  <div class="about-note" data-i18n="aboutNote">
     <strong>Not:</strong> Bu resm&icirc; bir Flop Labs kayna&#287;&#305; de&#287;il. Kurulum ad&#305;mlar&#305; iki yerden
     geliyor: i&#351;letim sistemi seviyesindeki komutlar (WSL, Homebrew, winget) ilgili resm&icirc; dok&uuml;mantasyondan
     do&#287;rulanarak al&#305;nd&#305;; Technocore arac&#305;n&#305;n kendi kurulumu ise
@@ -185,6 +195,56 @@
 <script>
 (function () {
   "use strict";
+
+  /* ============== i18n (chrome strings) ============== */
+  var STR = {
+    tr: {
+      themeBtn: "Koyu", themeBtnLight: "Açık",
+      h1: "Sıfırdan Technocore kurulumu",
+      lede: "İşletim sistemine göre, terminalinden başlayarak <strong>tek tek</strong> seni yönlendiren bir sihirbaz. Önce gerekli program varsa kuruyoruz, sonra zunmax'ın aracını kurup ilk DID'ini oluşturuyoruz. Her komutta kopyala butonu var, hiçbir yerde private key veya parolan bizden geçmiyor.",
+      linkTroubleshooter: "🛠 Sorun Giderici",
+      linkProof: "🔏 Proof Seal (imza doğrulayıcı)",
+      linkSource: "📦 Kaynak kod",
+      aboutNote: "<strong>Not:</strong> Bu resmî bir Flop Labs kaynağı değil. Kurulum adımları iki yerden geliyor: işletim sistemi seviyesindeki komutlar (WSL, Homebrew, winget) ilgili resmî dokümantasyondan doğrulanarak alındı; Technocore aracının kendi kurulumu ise <a href=\"https://github.com/zunmax/technocore-did-starter\" target=\"_blank\" rel=\"noopener\">zunmax/technocore-did-starter</a> reposunun kaşesinden ve kaynak kodundan. Bir hata alırsan Sorun Giderici'ye bakabilirsin.",
+      osWinName: "Windows", osWinDesc: "PowerShell ya da WSL/Ubuntu ile",
+      osMacName: "macOS", osMacDesc: "Terminal ve Homebrew ile",
+      back: "← geri", copy: "kopyala", copied: "kopyalandı",
+      openInBrowser: "tarayıcıda aç",
+      outcomeDone: "Tamamlandı", outcomeRead: "Devam etmeden önce oku",
+      restart: "Baştan başla", nextBtn: "İleri →",
+      pathWinWsl: "Windows · WSL/Ubuntu", pathWinPs: "Windows · PowerShell", pathMac: "macOS"
+    },
+    en: {
+      themeBtn: "Dark", themeBtnLight: "Light",
+      h1: "Technocore setup, from scratch",
+      lede: "A wizard that walks you through your terminal <strong>one step at a time</strong>, based on your OS. We install any missing prerequisites first, then set up zunmax's tool and create your first DID. Every command has a copy button — your private key or passphrase never passes through us.",
+      linkTroubleshooter: "🛠 Troubleshooter",
+      linkProof: "🔏 Proof Seal (signature verifier)",
+      linkSource: "📦 Source code",
+      aboutNote: "<strong>Note:</strong> this is not an official Flop Labs resource. The setup steps come from two places: OS-level commands (WSL, Homebrew, winget) verified against their official docs; the Technocore tool's own setup comes straight from the <a href=\"https://github.com/zunmax/technocore-did-starter\" target=\"_blank\" rel=\"noopener\">zunmax/technocore-did-starter</a> repo's README and source. If you hit an error, check the Troubleshooter.",
+      osWinName: "Windows", osWinDesc: "with PowerShell or WSL/Ubuntu",
+      osMacName: "macOS", osMacDesc: "with Terminal and Homebrew",
+      back: "← back", copy: "copy", copied: "copied",
+      openInBrowser: "open in browser",
+      outcomeDone: "Done", outcomeRead: "Read before continuing",
+      restart: "Start over", nextBtn: "Next →",
+      pathWinWsl: "Windows · WSL/Ubuntu", pathWinPs: "Windows · PowerShell", pathMac: "macOS"
+    }
+  };
+  var lang = "tr";
+  function t(key) { return STR[lang][key] || STR.tr[key] || key; }
+
+  function applyI18n() {
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-i18n]").forEach(function (el) {
+      var key = el.getAttribute("data-i18n");
+      var val = t(key);
+      if (/<[a-z]/i.test(val)) el.innerHTML = val; else el.textContent = val;
+    });
+    document.getElementById("langTR").setAttribute("aria-pressed", String(lang === "tr"));
+    document.getElementById("langEN").setAttribute("aria-pressed", String(lang === "en"));
+    render();
+  }
 
   var NODES = {};
   function n(node) { NODES[node.id] = node; }
@@ -386,6 +446,73 @@
   n({ id: "done", kind: "info", outcome: "success", isEnd: true,
       text: "Tebrikler — artık kendi DID'in var ve Technocore'a katıldın. Sıradaki adım: gerçek bir katkı hazırlayıp kaydetmek. Proof Seal ile imzanı bağımsız doğrulayabilir, bir sorunla karşılaşırsan Sorun Giderici'ye bakabilirsin." });
 
+  // ---------------- EN translations (keyed by node id) ----------------
+  var EN_WIZARD = {
+    "os": { text: "Which operating system are you using?" },
+    "win-wsl-q": { text: "Is Ubuntu (WSL) installed on this computer? If you're not sure, pick the third option — we'll check together.",
+      options: ["Yes, it's installed", "No, not installed", "Not sure", "I don't want WSL, I'll use PowerShell directly"] },
+    "win-wsl-check": { text: "Open PowerShell (Start menu → type \"powershell\" → Enter) and run:",
+      options: ["I see Ubuntu in the list", "Empty / error / no Ubuntu"] },
+    "win-wsl-install": { text: "Open PowerShell as ADMINISTRATOR (Start → powershell → right-click → \"Run as administrator\"), then run this. Requires Windows 10 (2004+) or Windows 11:" },
+    "win-wsl-restart": { text: "Once installation finishes, RESTART your computer — this step is required. Ubuntu may launch automatically on startup; if not, open it from the Start menu by typing \"Ubuntu\". On first launch it will ask for a username and password — this has nothing to do with your Windows password, it's a new user just for inside Ubuntu, pick anything and remember it." },
+    "win-wsl-open": { text: "The Ubuntu terminal is ready now. Open it from the Start menu by typing \"Ubuntu\" — the steps from here on happen in that window." },
+    "win-ps-check-python": { text: "Open PowerShell and check your Python version:",
+      options: ["I see Python 3.12.x", "\"No suitable Python runtime found\" / error"] },
+    "win-ps-python-install": { text: "Install Python 3.12:" },
+    "win-ps-python-restart": { text: "Once installation finishes, close the PowerShell window and reopen it." },
+    "win-ps-check-python2": { text: "Try again:", options: ["I see it now", "Still not working"] },
+    "win-ps-python-fail": { text: "Check the \"No suitable Python runtime found\" card in the Troubleshooter — it has more detail on this error." },
+    "win-ps-git": { text: "Check whether Git is installed:", options: ["I see a version", "Not installed / not recognized"] },
+    "win-ps-git-install": { text: "Install Git:" },
+    "win-ps-git-restart": { text: "Close PowerShell and reopen it." },
+    "win-ps-clone": { text: "Download the project:" },
+    "win-ps-venv": { text: "Create a Python environment just for this:" },
+    "win-ps-activate": { text: "Activate the environment:",
+      options: ["I see (.venv) at the start of the line", "\"cannot be loaded / scripts disabled\" error"] },
+    "win-ps-policy": { text: "Allow script execution for this session:" },
+    "win-ps-activate-retry": { text: "Try again:" },
+    "win-ps-deps": { text: "Install the required packages:" },
+    "win-ps-verify": { text: "Verify the installation:", options: ["I see a version like 1.0.0", "I got an error"] },
+    "win-ps-verify-fail": { text: "If you see \"No module named cryptography\", the venv isn't active — run Activate.ps1 again. For any other error, check the Troubleshooter." },
+    "win-ps-init": { text: "You can now create your own DID — choose a passphrase at least 12 characters long and enter it twice:" },
+    "win-ps-lobby": { text: "Send your first signed message to Technocore:",
+      options: ["Got a successful JSON response", "Timeout / got an error"] },
+    "mac-terminal": { text: "Open the Terminal app: press Cmd+Space, type \"Terminal\", press Enter." },
+    "mac-brew-q": { text: "Check whether Homebrew (the package manager) is installed:",
+      options: ["I see a version number", "\"command not found\" error"] },
+    "mac-brew-install": { text: "Install Homebrew (the official install command from brew.sh):" },
+    "mac-brew-path": { text: "Once installation finishes, the terminal may print a few \"add to PATH\" commands (especially on Apple Silicon Macs) — copy and run exactly what it shows, then close and reopen Terminal." },
+    "mac-python": { text: "Install Python 3.12 with Homebrew:" },
+    "mac-python-verify": { text: "Verify the installation:", options: ["I see Python 3.12.x", "\"command not found\" error"] },
+    "mac-python-retry": { text: "Close Terminal completely, reopen it, and try again. If it still doesn't work, you may have skipped the PATH commands from the previous step — re-read the output of brew install python@3.12." },
+    "mac-git": { text: "Check whether Git is installed (macOS usually pops up its own install prompt on first use — click \"Install\" if it does):" },
+    "linux-update": { text: "In the Ubuntu terminal, first update the package list:" },
+    "linux-python-check": { text: "Check your Python version:", options: ["I see 3.12 or newer", "An older version / error"] },
+    "linux-python-install": { text: "Install Python 3.12:", options: ["Installed, no problem", "\"Unable to locate package\" error"] },
+    "linux-python-ppa": { text: "Your Ubuntu release may not have 3.12 in its official repos yet. Add the deadsnakes PPA and try again (a common, trusted source):" },
+    "linux-git": { text: "Check whether Git is installed:", options: ["I see a version", "Not installed"] },
+    "linux-git-install": { text: "Install Git:" },
+    "bash-clone": { text: "Download the project:" },
+    "bash-venv": { text: "Create and activate a Python environment just for this:" },
+    "bash-deps": { text: "Install the required packages:" },
+    "bash-verify": { text: "Check that the installation works correctly:", options: ["I see a version like 1.0.0", "I got an error"] },
+    "bash-verify-fail": { text: "If you see \"No module named cryptography\", the venv isn't active — run source .venv/bin/activate again (you'll need to redo this every time you open a new terminal). For any other error, check the Troubleshooter." },
+    "bash-init": { text: "You can now create your own DID — choose a passphrase at least 12 characters long and enter it twice:" },
+    "bash-lobby": { text: "Send your first signed message to Technocore:",
+      options: ["Got a successful JSON response", "Timeout / got an error"] },
+    "lobby-fail": { text: "This is exactly what the Troubleshooter's \"write timed out\" card covers — check it and continue from there. Don't panic, you can check whether your message actually went through with the read command." },
+    "done": { text: "Congratulations — you now have your own DID and have joined Technocore. Next step: prepare a real contribution and register it. You can independently verify your signature with Proof Seal, and check the Troubleshooter if you run into any issues." }
+  };
+
+  function nodeText(node) {
+    if (lang === "en" && EN_WIZARD[node.id] && EN_WIZARD[node.id].text) return EN_WIZARD[node.id].text;
+    return node.text;
+  }
+  function optionLabel(node, idx) {
+    if (lang === "en" && EN_WIZARD[node.id] && EN_WIZARD[node.id].options) return EN_WIZARD[node.id].options[idx];
+    return node.options[idx].label;
+  }
+
   // ---------------- engine ----------------
   var root = document.documentElement;
   var themeBtn = document.getElementById("themeToggle");
@@ -394,8 +521,10 @@
     if (s === "dark") return true; if (s === "light") return false;
     return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
   }
-  function syncTheme() { themeBtn.textContent = isDark() ? "Açık" : "Koyu"; }
+  function syncTheme() { themeBtn.textContent = isDark() ? t("themeBtnLight") : t("themeBtn"); }
   themeBtn.addEventListener("click", function () { root.setAttribute("data-theme", isDark() ? "light" : "dark"); syncTheme(); });
+  var origApplyI18n = applyI18n;
+  applyI18n = function () { origApplyI18n(); syncTheme(); };
   syncTheme();
 
   function escapeHtml(s) {
@@ -415,9 +544,9 @@
   function currentPathLabel() {
     for (var i = stack.length - 1; i >= 0; i--) {
       var node = NODES[stack[i]];
-      if (node && node.path === "win") return { cls: "win", label: "Windows · WSL/Ubuntu" };
-      if (node && node.path === "win-ps") return { cls: "win", label: "Windows · PowerShell" };
-      if (node && node.path === "mac") return { cls: "mac", label: "macOS" };
+      if (node && node.path === "win") return { cls: "win", label: t("pathWinWsl") };
+      if (node && node.path === "win-ps") return { cls: "win", label: t("pathWinPs") };
+      if (node && node.path === "mac") return { cls: "mac", label: t("pathMac") };
     }
     return null;
   }
@@ -433,35 +562,35 @@
       var isLast = i === stack.length - 1;
       return '<span class="crumb' + (isLast ? " current" : "") + '">' + (i + 1) + '</span>';
     }).join('<span class="sep">›</span>');
-    var backBtn = stack.length > 1 ? '<button class="back-btn" id="backBtn">← geri</button>' : "";
+    var backBtn = stack.length > 1 ? '<button class="back-btn" id="backBtn">' + t("back") + '</button>' : "";
 
     var html = '<div class="crumbs">' + crumbs + backBtn + '</div>';
 
     if (node.kind === "oscard") {
-      html += '<div class="step-text">' + escapeHtml(node.text) + '</div>';
+      html += '<div class="step-text">' + escapeHtml(nodeText(node)) + '</div>';
       html += '<div class="os-choices">' +
-        '<button class="os-card" data-goto="win-wsl-q"><span class="icon">⊞</span><span class="name">Windows</span><span class="desc">PowerShell ya da WSL/Ubuntu ile</span></button>' +
-        '<button class="os-card" data-goto="mac-terminal"><span class="icon">⌘</span><span class="name">macOS</span><span class="desc">Terminal ve Homebrew ile</span></button>' +
+        '<button class="os-card" data-goto="win-wsl-q"><span class="icon">⊞</span><span class="name">' + t("osWinName") + '</span><span class="desc">' + t("osWinDesc") + '</span></button>' +
+        '<button class="os-card" data-goto="mac-terminal"><span class="icon">⌘</span><span class="name">' + t("osMacName") + '</span><span class="desc">' + t("osMacDesc") + '</span></button>' +
         '</div>';
     } else {
-      html += '<div class="step-text">' + escapeHtml(node.text) + '</div>';
+      html += '<div class="step-text">' + escapeHtml(nodeText(node)) + '</div>';
       if (node.cmd) {
         html += '<div class="cmd-row"><div class="cmd-block">' + escapeHtml(node.cmd) + '</div>' +
-          '<button class="copy-btn" data-copy="' + encodeURIComponent(node.cmd) + '">kopyala</button></div>';
+          '<button class="copy-btn" data-copy="' + encodeURIComponent(node.cmd) + '">' + t("copy") + '</button></div>';
       }
       if (node.url) {
-        html += '<div class="url-block"><a href="' + escapeHtml(node.url) + '" target="_blank" rel="noopener">' + escapeHtml(node.url) + '</a><span class="url-hint">tarayıcıda aç</span></div>';
+        html += '<div class="url-block"><a href="' + escapeHtml(node.url) + '" target="_blank" rel="noopener">' + escapeHtml(node.url) + '</a><span class="url-hint">' + t("openInBrowser") + '</span></div>';
       }
       if (node.isEnd) {
         var oc = node.outcome || "success";
-        html += '<div class="outcome-badge ' + oc + '"><span class="badge">' + (oc === "success" ? "✓" : "!") + '</span>' + (oc === "success" ? "Tamamlandı" : "Devam etmeden önce oku") + '</div>';
-        html += '<div class="next-row"><button class="btn-secondary" id="restartBtn">Baştan başla</button></div>';
+        html += '<div class="outcome-badge ' + oc + '"><span class="badge">' + (oc === "success" ? "✓" : "!") + '</span>' + (oc === "success" ? t("outcomeDone") : t("outcomeRead")) + '</div>';
+        html += '<div class="next-row"><button class="btn-secondary" id="restartBtn">' + t("restart") + '</button></div>';
       } else if (node.options && node.options.length) {
-        html += '<div class="options">' + node.options.map(function (opt) {
-          return '<button class="opt-btn" data-goto="' + escapeHtml(opt.next) + '">' + escapeHtml(opt.label) + '</button>';
+        html += '<div class="options">' + node.options.map(function (opt, idx) {
+          return '<button class="opt-btn" data-goto="' + escapeHtml(opt.next) + '">' + escapeHtml(optionLabel(node, idx)) + '</button>';
         }).join("") + '</div>';
       } else if (node.next) {
-        html += '<div class="next-row"><button class="btn-primary" data-goto="' + escapeHtml(node.next) + '">İleri →</button></div>';
+        html += '<div class="next-row"><button class="btn-primary" data-goto="' + escapeHtml(node.next) + '">' + t("nextBtn") + '</button></div>';
       }
     }
 
@@ -477,8 +606,8 @@
       var text = decodeURIComponent(copyBtn.getAttribute("data-copy"));
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(function () {
-          copyBtn.textContent = "kopyalandı"; copyBtn.classList.add("copied");
-          setTimeout(function () { copyBtn.textContent = "kopyala"; copyBtn.classList.remove("copied"); }, 1400);
+          copyBtn.textContent = t("copied"); copyBtn.classList.add("copied");
+          setTimeout(function () { copyBtn.textContent = t("copy"); copyBtn.classList.remove("copied"); }, 1400);
         }).catch(function () {});
       }
       return;
@@ -488,8 +617,12 @@
     if (e.target.closest("#restartBtn")) { stack = ["os"]; render(); return; }
   });
 
-  render();
+  document.getElementById("langTR").addEventListener("click", function () { lang = "tr"; applyI18n(); });
+  document.getElementById("langEN").addEventListener("click", function () { lang = "en"; applyI18n(); });
+
+  applyI18n();
 })();
 </script>
+
 </body>
 </html>

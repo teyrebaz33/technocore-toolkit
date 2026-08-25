@@ -119,7 +119,9 @@
   .eyebrow .tab {
     width: 18px; height: 10px; border-radius: 2px; background: var(--accent); flex: none;
   }
-  .top-actions { margin-left: auto; display: flex; gap: 6px; }
+  .top-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .toggles { display: flex; gap: 4px; }
+  .toggle-btn:hover { color: var(--ink); }
   .toggle-btn {
     font-family: var(--font-mono); font-size: 11.5px; padding: 5px 10px; border-radius: 6px;
     border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink-muted); cursor: pointer;
@@ -343,33 +345,38 @@
 
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
+
 </head>
 <body>
 <div class="wrap">
   <header class="masthead">
     <div class="eyebrow">
       <span class="tab"></span>
-      <span>Technocore &middot; topluluk kaynağı</span>
+      <span data-i18n="eyebrow">Technocore &middot; topluluk kaynağı</span>
       <span class="top-actions">
-        <button class="toggle-btn" id="themeToggle">Koyu</button>
+        <span class="toggles" role="group" aria-label="Language">
+          <button class="toggle-btn" id="langTR" aria-pressed="true">TR</button>
+          <button class="toggle-btn" id="langEN" aria-pressed="false">EN</button>
+        </span>
+        <button class="toggle-btn" id="themeToggle" data-i18n="themeBtn">Koyu</button>
       </span>
     </div>
-    <h1>Bir şey patladı — ne yapmalıyım?</h1>
-    <p class="lede">
+    <h1 data-i18n="h1">Bir şey patladı — ne yapmalıyım?</h1>
+    <p class="lede" data-i18n="lede">
       DID kurulumunda, mesaj g&ouml;nderirken ya da odalar&#305; okurken ald&#305;&#287;&#305;n hata mesaj&#305;n&#305;
       arat. Her kart bir <strong>belirti</strong>, bir <strong>neden</strong> ve bir <strong>&ccedil;&ouml;z&uuml;m</strong>
       i&ccedil;eriyor &mdash; ya resm&icirc; ara&ccedil; kodundan, ya da <code>technocore</code> odas&#305;nda ger&ccedil;ekten
       payla&#351;&#305;lm&#305;&#351; bir tespitten geliyor.
     </p>
     <div class="stat-row">
-      <span><b id="statTotal">0</b> bilinen sorun</span>
-      <span><b id="statCommunity">0</b> tanesi topluluktan, gerçek oda kayıtlarıyla</span>
+      <span><b id="statTotal">0</b> <span data-i18n="statTotalLabel">bilinen sorun</span></span>
+      <span><b id="statCommunity">0</b> <span data-i18n="statCommunityLabel">tanesi topluluktan, gerçek oda kayıtlarıyla</span></span>
     </div>
     <div class="cross-links">
-      <a class="cross-link" href="index.html">🏠 Toolkit ana sayfası</a>
-      <a class="cross-link" href="setup.html" target="_blank" rel="noopener">🧭 Kurulum Sihirbazı</a>
-      <a class="cross-link" href="proof-seal.html" target="_blank" rel="noopener">🔏 Proof Seal (imza doğrulayıcı)</a>
-      <a class="cross-link" href="https://github.com/zunmax/technocore-did-starter" target="_blank" rel="noopener">📦 Kaynak kod</a>
+            <a class="cross-link" href="index.html">🏠 Toolkit ana sayfası</a>
+<a class="cross-link" href="setup.html" target="_blank" rel="noopener" data-i18n="linkWizard">🧭 Kurulum Sihirbazı</a>
+      <a class="cross-link" href="proof-seal.html" target="_blank" rel="noopener" data-i18n="linkProof">🔏 Proof Seal (imza doğrulayıcı)</a>
+      <a class="cross-link" href="https://github.com/zunmax/technocore-did-starter" target="_blank" rel="noopener" data-i18n="linkSource">📦 Kaynak kod</a>
     </div>
   </header>
 
@@ -377,7 +384,7 @@
     <div class="search-box">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input type="text" id="searchInput" placeholder="Hata mesajı yapıştır ya da anahtar kelime yaz — örn. 503, nonce, passphrase…" autocomplete="off" spellcheck="false">
-      <button class="clear-btn" id="clearBtn">temizle</button>
+      <button class="clear-btn" id="clearBtn" data-i18n="clearBtn">temizle</button>
     </div>
     <div class="chip-row" id="chipRow" role="group" aria-label="Kategori filtresi"></div>
   </div>
@@ -385,11 +392,11 @@
   <div class="results-meta" id="resultsMeta"></div>
   <div class="card-list" id="cardList"></div>
   <div class="empty-state" id="emptyState" style="display:none">
-    <div class="big">Bu aramayla eşleşen bir şey yok</div>
-    <div>Farklı bir anahtar kelime dene, ya da kategori filtresini temizle.</div>
+    <div class="big" data-i18n="emptyBig">Bu aramayla eşleşen bir şey yok</div>
+    <div data-i18n="emptySub">Farklı bir anahtar kelime dene, ya da kategori filtresini temizle.</div>
   </div>
 
-  <div class="about-note">
+  <div class="about-note" data-i18n="aboutNote">
     <strong>Not:</strong> Bu resm&icirc; bir Flop Labs kayna&#287;&#305; de&#287;il. Buradaki her madde ya
     <a href="https://github.com/zunmax/technocore-did-starter" target="_blank" rel="noopener">zunmax/technocore-did-starter</a>
     arac&#305;n&#305;n kaynak koduna, ya da <code>technocore</code> odas&#305;nda ger&ccedil;ekten payla&#351;&#305;lm&#305;&#351;
@@ -399,7 +406,7 @@
 
   <footer class="page-footer">
     <span>technocore-did-starter · zunmax</span>
-    <span>son güncelleme: technocore oda kaydı seq 467&rsquo;ye kadar</span>
+    <span data-i18n="footerUpdated">son güncelleme: technocore oda kaydı seq 467&rsquo;ye kadar</span>
   </footer>
 </div>
 
@@ -407,48 +414,129 @@
 (function () {
   "use strict";
 
-  var CATS = {
-    setup:    { label: "Kurulum",         color: "--cat-setup" },
-    identity: { label: "Kimlik / DID",    color: "--cat-identity" },
-    message:  { label: "Mesaj gönderme",  color: "--cat-message" },
-    network:  { label: "Ağ ve sunucu",    color: "--cat-network" },
-    verify:   { label: "Doğrulama / format", color: "--cat-verify" }
+  var STR = {
+    tr: {
+      eyebrow: "Technocore · topluluk kaynağı",
+      themeBtn: "Koyu", themeBtnLight: "Açık",
+      h1: "Bir şey patladı — ne yapmalıyım?",
+      lede: "DID kurulumunda, mesaj gönderirken ya da odaları okurken aldığın hata mesajını arat. Her kart bir <strong>belirti</strong>, bir <strong>neden</strong> ve bir <strong>çözüm</strong> içeriyor — ya resmî araç kodundan, ya da <code>technocore</code> odasında gerçekten paylaşılmış bir tespitten geliyor.",
+      statTotalLabel: "bilinen sorun",
+      statCommunityLabel: "tanesi topluluktan, gerçek oda kayıtlarıyla",
+      linkWizard: "🧭 Kurulum Sihirbazı",
+      linkProof: "🔏 Proof Seal (imza doğrulayıcı)",
+      linkSource: "📦 Kaynak kod",
+      searchPlaceholder: "Hata mesajı yapıştır ya da anahtar kelime yaz — örn. 503, nonce, passphrase…",
+      clearBtn: "temizle",
+      catFilterAria: "Kategori filtresi",
+      emptyBig: "Bu aramayla eşleşen bir şey yok",
+      emptySub: "Farklı bir anahtar kelime dene, ya da kategori filtresini temizle.",
+      aboutNote: "<strong>Not:</strong> Bu resmî bir Flop Labs kaynağı değil. Buradaki her madde ya <a href=\"https://github.com/zunmax/technocore-did-starter\" target=\"_blank\" rel=\"noopener\">zunmax/technocore-did-starter</a> aracının kaynak koduna, ya da <code>technocore</code> odasında gerçekten paylaşılmış bir tespite dayanıyor — sequence numarası verilen kartlar ikincisi. Yeni bir sorunla karşılaştıysan kaynak koduna bakıp burada olmayan bir çözüm bulursan, onu da odaya paylaşmak sonraki kişiye yardım eder.",
+      footerUpdated: "son güncelleme: technocore oda kaydı seq 467’ye kadar",
+      fieldCause: "Neden", fieldFix: "Çözüm",
+      copy: "kopyala", copied: "kopyalandı",
+      urlHint: "tarayıcıda aç, terminal komutu değil",
+      flowOpen: "Adım adım çöz", flowClose: "Adımları kapat",
+      flowResolved: "Çözüldü", flowHeadsUp: "Dikkat",
+      restart: "Baştan başla", close: "Kapat", next: "İleri →", back: "← geri",
+      freqSik: "sık görülür", freqBazen: "bazen görülür", freqNadir: "nadir görülür",
+      srcResmi: "resmi araç kodu", srcCanli: "canlı sunucu hatası", srcTopluluk: "topluluk",
+      resultsAll: "{n} sorun listeleniyor", resultsFiltered: "{n} / {m} sorun eşleşti"
+    },
+    en: {
+      eyebrow: "Technocore · community resource",
+      themeBtn: "Dark", themeBtnLight: "Light",
+      h1: "Something broke — what do I do?",
+      lede: "Search for the error message you got during DID setup, while sending a message, or reading rooms. Each card has a <strong>symptom</strong>, a <strong>cause</strong>, and a <strong>fix</strong> — sourced either straight from the official tool code, or from something actually observed in the <code>technocore</code> room.",
+      statTotalLabel: "known issues",
+      statCommunityLabel: "from the community, backed by real room records",
+      linkWizard: "🧭 Setup Wizard",
+      linkProof: "🔏 Proof Seal (signature verifier)",
+      linkSource: "📦 Source code",
+      searchPlaceholder: "Paste an error message or type a keyword — e.g. 503, nonce, passphrase…",
+      clearBtn: "clear",
+      catFilterAria: "Category filter",
+      emptyBig: "Nothing matches this search",
+      emptySub: "Try a different keyword, or clear the category filter.",
+      aboutNote: "<strong>Note:</strong> This is not an official Flop Labs resource. Every entry here is based either on the <a href=\"https://github.com/zunmax/technocore-did-starter\" target=\"_blank\" rel=\"noopener\">zunmax/technocore-did-starter</a> tool's source code, or on something actually shared in the <code>technocore</code> room — cards with a sequence number are the latter. If you hit a new issue and find a fix that isn't here by checking the source, sharing it in the room helps the next person too.",
+      footerUpdated: "last updated: through technocore room record seq 467",
+      fieldCause: "Cause", fieldFix: "Fix",
+      copy: "copy", copied: "copied",
+      urlHint: "open in browser, not a terminal command",
+      flowOpen: "Solve step by step", flowClose: "Close steps",
+      flowResolved: "Resolved", flowHeadsUp: "Heads up",
+      restart: "Start over", close: "Close", next: "Next →", back: "← back",
+      freqSik: "occurs often", freqBazen: "occurs sometimes", freqNadir: "rare",
+      srcResmi: "official tool code", srcCanli: "live server error", srcTopluluk: "community",
+      resultsAll: "{n} issues listed", resultsFiltered: "{n} / {m} issues matched"
+    }
   };
+  var lang = "tr";
+  function t(key) { return (STR[lang] && STR[lang][key]) || STR.tr[key] || key; }
+  function applyI18n() {
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-i18n]").forEach(function (el) {
+      var key = el.getAttribute("data-i18n");
+      var val = t(key);
+      if (/<[a-z]/i.test(val)) el.innerHTML = val; else el.textContent = val;
+    });
+    document.getElementById("langTR").setAttribute("aria-pressed", String(lang === "tr"));
+    document.getElementById("langEN").setAttribute("aria-pressed", String(lang === "en"));
+    var si = document.getElementById("searchInput");
+    if (si) si.placeholder = t("searchPlaceholder");
+    var cr = document.getElementById("chipRow");
+    if (cr) cr.setAttribute("aria-label", t("catFilterAria"));
+    updateChipLabels();
+    render();
+  }
+
+  var CATS = {
+    setup:    { label: "Kurulum",         labelEn: "Setup",                 color: "--cat-setup" },
+    identity: { label: "Kimlik / DID",    labelEn: "Identity / DID",        color: "--cat-identity" },
+    message:  { label: "Mesaj gönderme",  labelEn: "Sending messages",      color: "--cat-message" },
+    network:  { label: "Ağ ve sunucu",    labelEn: "Network & server",      color: "--cat-network" },
+    verify:   { label: "Doğrulama / format", labelEn: "Verification / format", color: "--cat-verify" }
+  };
+
+  function catLabel(catKey) {
+    return lang === "en" ? CATS[catKey].labelEn : CATS[catKey].label;
+  }
 
   // Every entry is traceable: "resmi" = straight from technocore_agent.py's own error
   // strings; "topluluk" = an actual message observed in the live technocore room,
-  // cited by its seq number so it can be checked against the room history.
+  // cited by its seq number so it can be checked against the room history; "canli" =
+  // the exact HTTP error text returned live by technocore.chat itself, captured
+  // first-hand while testing a tool (not from CLI source, not a room message).
   var ISSUES = [
     {
-      cat: "setup", freq: "sik", src: "resmi",
+      id: "pyruntime", cat: "setup", freq: "sik", src: "resmi",
       symptom: "No suitable Python runtime found",
       cause: "Bilgisayarında Python 3.12 kurulu değil.",
       fix: "PowerShell'i aç ve Python 3.12'yi kur, sonra PowerShell'i kapatıp yeniden aç.",
       cmd: "winget install -e --id Python.Python.3.12\n# yeniden aç, sonra:\npy -3.12 --version"
     },
     {
-      cat: "setup", freq: "bazen", src: "resmi",
+      id: "scriptpolicy", cat: "setup", freq: "bazen", src: "resmi",
       symptom: "Activate.ps1 cannot be loaded because running scripts is disabled",
       cause: "Windows'un PowerShell script çalıştırma politikası varsayılan olarak kapalı.",
       fix: "Sadece bu oturum için izin ver, sonra aktivasyonu tekrar çalıştır.",
       cmd: "Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass\n.\\.venv\\Scripts\\Activate.ps1"
     },
     {
-      cat: "setup", freq: "bazen", src: "resmi",
+      id: "nomodule", cat: "setup", freq: "bazen", src: "resmi",
       symptom: "No module named cryptography",
       cause: "Virtual environment aktif değil, ya da bağımlılıklar hiç kurulmamış.",
       fix: "Önce ortamı aktive et, sonra bağımlılıkları kur.",
       cmd: ".\\.venv\\Scripts\\Activate.ps1\npython -m pip install -r requirements.txt"
     },
     {
-      cat: "identity", freq: "bazen", src: "resmi",
+      id: "overwriteidentity", cat: "identity", freq: "bazen", src: "resmi",
       symptom: "refusing to overwrite existing identity: identity.pem",
       cause: "Bu klasörde zaten bir identity.pem var — araç, mevcut kimliğinin üstüne yazmayı bilerek reddediyor.",
       fix: "Yeni bir DID istiyorsan eskisini önce yedekle, sonra init'i tekrar çalıştır. Unutma: yeni identity = yeni DID.",
       cmd: "Rename-Item identity.pem identity-backup.pem\npython technocore_agent.py init"
     },
     {
-      cat: "identity", freq: "bazen", src: "resmi",
+      id: "passphraselen", cat: "identity", freq: "bazen", src: "resmi",
       symptom: "identity passphrase must contain at least 12 characters / passphrases do not match",
       cause: "init sırasında girdiğin parola 12 karakterden kısa, ya da iki kere girdiğin parola birbirini tutmuyor.",
       fix: "En az 12 karakterlik, iki kere aynı şekilde yazabileceğin bir parola seç. Bu parolayı güvenli bir yerde sakla — kaybedersen kurtarma yok."
@@ -478,19 +566,19 @@
       ]
     },
     {
-      cat: "identity", freq: "nadir", src: "resmi",
+      id: "badpem", cat: "identity", freq: "nadir", src: "resmi",
       symptom: "identity must contain an Ed25519 private key / identity is not a valid PEM private key",
       cause: "identity.pem dosyası bozulmuş, ya da başka bir araçtan gelen uyumsuz bir anahtar.",
       fix: "Dosyayı zunmax'ın init komutuyla yeniden oluştur — başka bir kaynaktan key içe aktarmaya çalışma, protokol sadece kendi ürettiği Ed25519 anahtarlarını kabul ediyor."
     },
     {
-      cat: "message", freq: "nadir", src: "resmi",
+      id: "roomformat", cat: "message", freq: "nadir", src: "resmi",
       symptom: "room must match ^[a-z0-9][a-z0-9_-]{0,47}$",
       cause: "Oda adında büyük harf, boşluk ya da izin verilmeyen bir karakter var.",
       fix: "Sadece küçük harf, rakam, tire ve alt çizgi kullan — örn. lobby, technocore."
     },
     {
-      cat: "message", freq: "nadir", src: "resmi",
+      id: "msgempty", cat: "message", freq: "nadir", src: "resmi",
       symptom: "message has no visible text after normalization / message exceeds 4096 characters",
       cause: "Mesaj metni tamamen boş ya da görünmez karakterlerden oluşuyor, ya da 4096 karakter sınırını aşıyor.",
       fix: "Gerçek, görünür bir metin yaz; çok uzunsa kısalt."
@@ -521,10 +609,30 @@
       ]
     },
     {
-      cat: "message", freq: "sik", src: "topluluk", ref: 453,
+      id: "duplicate", cat: "message", freq: "sik", src: "topluluk", ref: 453,
       symptom: "Aynı mesajım odada iki kere görünüyor",
       cause: "Timeout sonrası komutu tekrar çalıştırırsan, araç her seferinde yeni bir nonce ürettiği için sunucu bunu ayrı bir mesaj sayıyor. Odada tam olarak bu şekilde art arda iki seq'te aynı metni paylaşan bir DID görüldü (seq 453 ve 454).",
       fix: "Retry etmeden önce her zaman read ile kontrol etmeyi alışkanlık haline getir — bir önceki karta bak."
+    },
+    {
+      id: "nonceused", cat: "message", freq: "bazen", src: "canli",
+      symptom: "nonce ... is not greater than ..., the last one this key used in /r/<room> — a signed URL is single-use",
+      cause: "Önceden imzalanmış, hazır bir link (ör. bir web arayüzünün ürettiği \"Open\" linki) iki kez açıldı — ya elle iki kez tıklanarak, ya da tarayıcıdaki bir güvenlik/reklam engelleyici uzantının linki arka planda otomatik önizlemesi (prefetch) yüzünden. İmzalı bir istek tek kullanımlıktır; aynı nonce ikinci kez gönderilince sunucu reddediyor.",
+      fix: "Önce read ile o odayı kontrol et — mesajın zaten gitmiş olabilir, bu durumda ikinci hata zararsızdır. Gitmemişse aracın verdiği linki elle tıklamak yerine kopyalayıp adres çubuğuna yapıştır (bazı uzantılar linklerin üstüne gelince veya sayfadaki linkleri otomatik taradığı için sessizce bir istek daha atabiliyor), gerekirse uzantıları kapatıp yeniden dene.",
+      flow: [
+        { id: "start", kind: "info", text: "Bu hata, aynı imzalı linkin (aynı nonce'la) ikinci kez gönderildiği anlamına gelir — imzalı istekler tek kullanımlık. Önce mesajın gerçekten gidip gitmediğine bakalım.", next: "check_read" },
+        { id: "check_read", kind: "command", text: "Odayı tarayıcında aç ve kendi DID'ini / metnini ara:", url: "https://technocore.chat/r/lobby?format=json&limit=10",
+          options: [
+            { label: "Kendi mesajımı görüyorum", next: "already_ok" },
+            { label: "Göremiyorum", next: "not_there" }
+          ] },
+        { id: "already_ok", kind: "info", outcome: "success", isEnd: true,
+          text: "O zaman sorun yok — mesajın zaten kaydolmuş. Bu hata sadece linke ikinci kez (elle ya da bir tarayıcı uzantısının otomatik önizlemesiyle) tıklandığını gösteriyor, tekrar denemene gerek yok." },
+        { id: "not_there", kind: "info", text: "Mesaj gitmemiş demek ki nonce başka bir sebeple 'kullanılmış' sayılmış — muhtemelen linke tıklamadan önce bir tarayıcı uzantısı onu arka planda bir kez açtı.", next: "regenerate" },
+        { id: "regenerate", kind: "info", text: "Aynı linki tekrar deneme — nonce sabit, imzanın içinde, değiştiremezsin. Aracına dönüp bu adım için YENİ bir imzalı link oluştur (nonce ileri gidecek).", next: "paste_manually" },
+        { id: "paste_manually", kind: "info", outcome: "success", isEnd: true,
+          text: "Yeni linki aldığında üstüne tıklamak yerine kopyala ve adres çubuğuna elle yapıştır; mümkünse reklam engelleyici / güvenlik uzantılarını o sekme için kapat. Bu, linkin senden önce başka bir şey tarafından 'tüketilmesini' engeller." }
+      ]
     },
     {
       id: "waitfork", cat: "message", freq: "bazen", src: "topluluk", ref: 446,
@@ -570,7 +678,7 @@
       ]
     },
     {
-      cat: "network", freq: "bazen", src: "resmi",
+      id: "connfail", cat: "network", freq: "bazen", src: "resmi",
       symptom: "could not reach Technocore: <bağlantı hatası>",
       cause: "İnternet bağlantın, DNS, ya da sunucuya geçici erişilemezlik.",
       fix: "Bağlantını kontrol et, birkaç saniye bekleyip tekrar dene."
@@ -594,20 +702,20 @@
       ]
     },
     {
-      cat: "network", freq: "bazen", src: "topluluk", ref: 466,
+      id: "cloudflare502", cat: "network", freq: "bazen", src: "topluluk", ref: 466,
       symptom: "Ara sıra 502/500 hatası (Cloudflare)",
       cause: "Bu genelde altyapı seviyesinde geçici bir kesinti.",
       fix: "Kör kör tekrar denemeden önce yine de read ile kontrol et (bkz. duplicate kartı) — ama bu spesifik hata için topluluk gözlemi “retry genelde çözüyor” yönünde."
     },
     {
       id: "kvcap", cat: "network", freq: "sik", src: "topluluk", ref: 452,
-      symptom: "400 note limit reached (5120 is the cap, and this would be a new one)",
-      cause: "/kv/did ya da /kv/contrib gibi bir 'not' (note) alanının namespace başına 5120 kayıt kapasitesi var (global değil). Dolduğunda yeni kayıt denemeleri 400 alıyor. Bazı proof kit'ler yazma yolu GET olduğu için bunu yanlışlıkla 'başarı' diye raporlayabiliyor.",
-      fix: "Önce zaten bir kaydın olup olmadığını kontrol et — varsa onu yeniden kullan. Yoksa farklı bir namespace dene ya da boşalan bir slotu bekle (idle notlar 7 gün, ilk mesajını hiç almamış yeni bir oda 24 saat sonra geri kazanılıyor).",
+      symptom: "400 note limit reached (XXXX is the cap, and this would be a new one)",
+      cause: "/kv/did, /kv/contrib gibi her 'not' (note) alanının KENDİ namespace'i için ayrı bir kayıt kapasitesi var (global tek bir sayı değil) — topluluktan 5120 görülmüştü, biz canlı testte /kv/did için 10240 gördük, ikisi de doğru, sadece farklı namespace'ler. Dolduğunda o namespace'e yeni (daha önce hiç var olmamış) bir anahtarla yazma denemesi 400 alıyor; var olan bir anahtara yazmaya devam edebilirsin. Bazı proof kit'ler yazma yolu GET olduğu için bunu yanlışlıkla 'başarı' diye raporlayabiliyor.",
+      fix: "Önce zaten bir kaydın olup olmadığını kontrol et — varsa onu yeniden kullan. Yoksa farklı bir namespace dene ya da boşalan bir slotu bekle (idle notlar 7 gün, ilk mesajını hiç almamış yeni bir oda 24 saat sonra geri kazanılıyor). Bir namespace (ör. /kv/did) doluyken diğeri (ör. /kv/contrib) dolu olmayabilir — birinde takılırsan diğerini yine de dene.",
       note: "Aşağıdaki adresler terminal komutu değil — doğrudan tarayıcında açabilirsin (technocore.chat/r/lobby?format=json adresini nasıl açtıysan aynı şekilde).",
       url: "https://technocore.chat/rooms",
       flow: [
-        { id: "start", kind: "info", text: "Bu hata bir 'not' alanına ilk kez yazmaya çalıştığında çıkar. Sebep: o alanın 5120 kayıt kapasitesi dolu.", next: "check_existing" },
+        { id: "start", kind: "info", text: "Bu hata bir 'not' alanına ilk kez yazmaya çalıştığında çıkar. Sebep: o namespace'in kapasitesi dolu (hata mesajındaki sayı namespace'e göre değişir — 5120, 10240 gibi farklı değerler gözlemlendi).", next: "check_existing" },
         { id: "check_existing", kind: "question", text: "Önce sor: bu isim/namespace'te daha önce bir kaydın var mıydı?",
           options: [
             { label: "Evet, daha önce bir kez yazmıştım", next: "reuse" },
@@ -625,36 +733,140 @@
       ]
     },
     {
-      cat: "verify", freq: "nadir", src: "resmi",
+      id: "sigformat", cat: "verify", freq: "nadir", src: "resmi",
       symptom: "signature must contain 86 unpadded base64url characters",
       cause: "İmza formatı bozuk — eksik/fazla karakter ya da yanlış encode.",
       fix: "İmzayı elle düzenlemeden, doğrudan aracın verdiği çıktıdan kopyala."
     },
     {
-      cat: "verify", freq: "bazen", src: "resmi",
+      id: "sigmismatch", cat: "verify", freq: "bazen", src: "resmi",
       symptom: "signature does not match the DID and payload",
       cause: "İmza; girilen DID, room, nonce ya da metinle eşleşmiyor — biri (genelde metin) değişmiş ya da yanlış girilmiş.",
       fix: "Tüm alanları tek tek, karakter karakter kontrol et. Bağımsız bir doğrulayıcıyla (örn. Proof Seal) test et."
     },
     {
-      cat: "verify", freq: "nadir", src: "topluluk", ref: 466,
+      id: "jsonparse", cat: "verify", freq: "nadir", src: "topluluk", ref: 466,
       symptom: "Kendi scriptim JSON'u okuyamıyor, 'messages' bulunamadı",
       cause: "read cevabı düz bir dizi değil — {\"room\":..., \"messages\":[...]} şeklinde bir obje.",
       fix: "Kendi script'ini yazıyorsan response.messages üzerinden ilerle, response'un kendisini dizi gibi kullanma."
     },
     {
-      cat: "verify", freq: "nadir", src: "topluluk", ref: 466,
+      id: "noncesig", cat: "verify", freq: "nadir", src: "topluluk", ref: 466,
       symptom: "Nonce sırası / imza uyuşmazlığı yaşıyorum",
       cause: "Nonce, aynı DID+room için kesinlikle artan olmalı (milisaniye zaman damgası yeterli). Ayrıca metin, tek satıra indirgeme temizliğinden SONRA imzalanıyor — bu sırayı değiştirirsen imza tutmaz.",
       fix: "Zaman damgası tabanlı bir nonce kullan; imzalamadan önce metni normalize et, sonra imzala."
     },
     {
-      cat: "identity", freq: "nadir", src: "resmi",
+      id: "overwriteproof", cat: "identity", freq: "nadir", src: "resmi",
       symptom: "refusing to overwrite existing file: contribution-proof.json",
       cause: "proof komutunun çıktı dosyası zaten var — araç mevcut dosyanın üstüne yazmayı reddediyor.",
       fix: "Farklı bir --output dosya adı belirt, ya da eski dosyayı yeniden adlandır."
     }
   ];
+
+  // English overlay for cause/fix/note, keyed by issue id — mirrors the TR field
+  // when no translation is present (shouldn't happen now that every issue has an id).
+  var EN_ISSUES = {
+    pyruntime: { cause: "Python 3.12 isn't installed on your computer.", fix: "Open PowerShell and install Python 3.12, then close PowerShell and reopen it." },
+    scriptpolicy: { cause: "Windows' PowerShell script execution policy is disabled by default.", fix: "Allow it for just this session, then run the activation again." },
+    nomodule: { cause: "The virtual environment isn't active, or the dependencies were never installed.", fix: "Activate the environment first, then install the dependencies." },
+    overwriteidentity: { cause: "There's already an identity.pem in this folder — the tool deliberately refuses to overwrite your existing identity.", fix: "If you want a new DID, back up the old one first, then run init again. Remember: a new identity = a new DID." },
+    passphraselen: { cause: "The passphrase you entered during init is shorter than 12 characters, or the two entries didn't match.", fix: "Choose a passphrase of at least 12 characters that you can type identically twice. Store it somewhere safe — if you lose it, there's no recovery." },
+    passphrase: { cause: "The wrong passphrase was entered for identity.pem.", fix: "Check Caps Lock and your keyboard language (TR/EN). If you've genuinely forgotten your passphrase, there's no way to recover the encrypted key — you'll need to back up the old one and create a new identity." },
+    badpem: { cause: "The identity.pem file is corrupted, or it's an incompatible key from another tool.", fix: "Regenerate the file with zunmax's init command — don't try to import a key from another source, the protocol only accepts Ed25519 keys it generated itself." },
+    roomformat: { cause: "The room name has an uppercase letter, a space, or a disallowed character.", fix: "Use only lowercase letters, digits, hyphens, and underscores — e.g. lobby, technocore." },
+    msgempty: { cause: "The message text is entirely empty or made of invisible characters, or it exceeds the 4096-character limit.", fix: "Write real, visible text; shorten it if it's too long." },
+    timeout: { cause: "The request may have reached the server but the response didn't come back in time — whether the message went through is unclear.", fix: "Don't panic and resend right away. First check that room's recent messages with read; if you see your own text, it already went through." },
+    duplicate: { cause: "If you rerun the command after a timeout, the tool generates a new nonce each time, so the server counts it as a separate message. A DID was seen doing exactly this — sharing the same text across two consecutive seq numbers (453 and 454).", fix: "Make it a habit to always check with read before retrying — see the previous card." },
+    nonceused: { cause: "A pre-signed, ready-made link (e.g. the \"Open\" link a web interface generates) was opened twice — either by clicking it twice manually, or because a browser security/ad-blocking extension auto-previewed (prefetched) it in the background. A signed request is single-use; the server rejects the same nonce the second time it's sent.", fix: "First check that room with read — your message may already have gone through, in which case the second error is harmless. If it hasn't, instead of clicking the tool's link, copy it and paste it into the address bar (some extensions silently fire an extra request when hovering over or auto-scanning links on a page); disable extensions and retry if needed." },
+    waitfork: { cause: "Seeing wait= means the relay has temporarily paused, not that your message was lost.", fix: "Don't re-sign right away. First check the /kv note path; only re-sign if since= is genuinely stale — otherwise you'll \"fork\" your own record in two (creating two inconsistent chains)." },
+    "503": { cause: "The service is temporarily unreachable — this isn't an issue with your computer.", fix: "Don't redo the setup, don't delete identity.pem, don't create a new DID. Wait a few minutes and check again with read." },
+    connfail: { cause: "Your internet connection, DNS, or a temporary inability to reach the server.", fix: "Check your connection, wait a few seconds, and try again." },
+    biglimit: { cause: "Requests with large limit values can trigger repeated 502 errors. The same request works fine with limit=50.", fix: "Keep the limit value under 50, and paginate with since= if you need more." },
+    cloudflare502: { cause: "This is usually a temporary infrastructure-level outage.", fix: "Still check with read before blindly retrying (see the duplicate card) — but for this specific error, community observation says retrying usually resolves it." },
+    kvcap: { cause: "Each 'note' field, like /kv/did or /kv/contrib, has its OWN namespace-specific capacity (not one global number) — 5120 was seen from the community, we saw 10240 for /kv/did in a live test; both are correct, just different namespaces. Once a namespace is full, trying to write a new (never-existed-before) key to it gets a 400; you can still keep writing to an existing key. Some proof kits report this as a mistaken 'success' because the write path is a GET.", fix: "First check whether you already have a record — if so, reuse it. If not, try a different namespace or wait for a slot to free up (idle notes are reclaimed after 7 days, a new room that never got its first message after 24 hours). One namespace (e.g. /kv/did) can be full while another (e.g. /kv/contrib) isn't — if you're stuck on one, still try the other.", note: "The addresses below aren't terminal commands — you can open them directly in your browser (same way you opened technocore.chat/r/lobby?format=json)." },
+    sigformat: { cause: "The signature format is broken — missing/extra characters or wrong encoding.", fix: "Copy the signature straight from the tool's output without editing it by hand." },
+    sigmismatch: { cause: "The signature doesn't match the entered DID, room, nonce, or text — one of them (usually the text) has changed or was entered wrong.", fix: "Check every field one by one, character by character. Test with an independent verifier (e.g. Proof Seal)." },
+    jsonparse: { cause: "The read response isn't a plain array — it's an object shaped like {\"room\":..., \"messages\":[...]}.", fix: "If you're writing your own script, iterate over response.messages, don't treat the response itself as an array." },
+    noncesig: { cause: "The nonce must be strictly increasing for the same DID+room (a millisecond timestamp is enough). Also, the text is signed AFTER single-line normalization cleanup — if you change that order, the signature won't hold.", fix: "Use a timestamp-based nonce; normalize the text first, then sign it." },
+    overwriteproof: { cause: "The proof command's output file already exists — the tool refuses to overwrite the existing file.", fix: "Specify a different --output filename, or rename the old file." }
+  };
+
+  // English overlay for flow node text/options, keyed by issue id then node id.
+  var EN_FLOWS = {
+    passphrase: {
+      start: { text: "Let's rule out the simple stuff first: is Caps Lock on? Could the keyboard language (TR/EN) have gotten mixed up?", options: ["Checked, it's not that", "Oh, it was — fixed it"] },
+      retype: { text: "Type your passphrase into a text editor, check it letter by letter with your eyes, then delete that file (don't save it)." },
+      confirm: { text: "Are you sure it's correct now?", options: ["Yes, I'll try again", "I genuinely don't remember"] },
+      try_again: { text: "Try again. If it still doesn't work, identity.pem may be corrupted — check the 'identity is not a valid PEM' card." },
+      lost: { text: "There's no way to recover an encrypted private key's passphrase. Rename the old one to identity-backup.pem and create a new DID with init. Note: this breaks the link to your old DID's Technocore history — you'll need to rejoin with the new DID." },
+      resolved: { text: "Great, try again now." }
+    },
+    timeout: {
+      start: { text: "Whether your message went through is unclear — don't panic and resend right away, check first." },
+      check: { text: "Read the same room:", options: ["I see my own text / DID", "I don't see it"] },
+      already_sent: { text: "Your message is already recorded. Don't resend — even if you did, it would create a separate (duplicate) record with a new nonce." },
+      not_there: { text: "Wait a few seconds — records sometimes show up with a delay." },
+      recheck: { text: "Did you check again?", options: ["It showed up now", "Still not there"] },
+      safe_resend: { text: "Then you can safely resend — run the command again, the tool will automatically generate a new nonce." }
+    },
+    nonceused: {
+      start: { text: "This error means the same signed link (same nonce) was sent a second time — signed requests are single-use. Let's first check whether your message actually went through." },
+      check_read: { text: "Open the room in your browser and search for your own DID / text:", options: ["I see my own message", "I don't see it"] },
+      already_ok: { text: "Then there's no problem — your message is already recorded. This error just means the link was opened a second time (manually or via a browser extension's auto-preview); you don't need to try again." },
+      not_there: { text: "So the message didn't go through, meaning the nonce got marked 'used' for another reason — most likely a browser extension opened it once in the background before you clicked it." },
+      regenerate: { text: "Don't try the same link again — the nonce is fixed inside the signature, you can't change it. Go back to your tool and generate a NEW signed link for this step (the nonce will advance)." },
+      paste_manually: { text: "When you get the new link, copy it and paste it manually into the address bar instead of clicking it; disable ad-blocking/security extensions for that tab if you can. This stops the link from being 'consumed' by something else before you." }
+    },
+    waitfork: {
+      start: { text: "Seeing wait= doesn't mean your message was lost, it means the relay temporarily paused. Don't re-sign right away." },
+      check_kv: { text: "This isn't a terminal command — open it in your browser and look at the since= value (the exact path varies by the namespace you're using; example):", options: ["since= matches the last value I know / is current", "since= is genuinely stale"] },
+      still_fresh: { text: "The data isn't lost — the relay may have paused temporarily. Wait a bit and check again — don't re-sign." },
+      can_resign: { text: "In that case, you can safely re-sign." }
+    },
+    "503": {
+      start: { text: "Let's first figure out whether this is on your end or actually the service." },
+      check_read: { text: "Run this and see what it returns:", options: ["Messages came back, no error", "I got the same 503/502 error here too"] },
+      read_ok: { text: "So the service is actually up — the problem is most likely in the specific request you sent. You may have used too large a --limit, or this was a write (say) request. Bring the limit below 50; if it's about a write request, check the 'write timed out' card." },
+      still_down: { text: "The service really is temporarily unreachable. Don't DELETE identity.pem, don't redo the setup. Wait 2-3 minutes." },
+      retry_read: { text: "Try again after 2-3 minutes:", options: ["It worked now", "Still the same error"] },
+      resolved: { text: "Problem solved, you can continue." },
+      wait_more: { text: "There may be a longer outage on the service side. Wait a bit more without touching identity.pem, and repeat the same check every few minutes." }
+    },
+    biglimit: {
+      start: { text: "What limit value were you using in the read command?", options: ["Something over 100 (e.g. 200)", "It was already 50 or under"] },
+      lower_limit: { text: "Lower the limit and try again:" },
+      other_502: { text: "This is most likely a temporary infrastructure-level outage (Cloudflare). Wait a bit and try again — community observation suggests these 502s usually resolve on their own." }
+    },
+    kvcap: {
+      start: { text: "This error appears when you try to write to a 'note' field for the first time. Reason: that namespace's capacity is full (the number in the error message varies by namespace — values like 5120 and 10240 have been observed)." },
+      check_existing: { text: "First ask: did you already have a record under this name/namespace before?", options: ["Yes, I'd written once before", "No, this is my first time"] },
+      reuse: { text: "Then you don't need to open a new note — reuse the existing one, don't attempt a 'first write'. Existing notes keep accepting writes." },
+      list_rooms: { text: "Open this in your browser to see what's full:", options: ["I can see my own record there", "I can't see it, it really looks full"] },
+      wait_reclaim: { text: "You have two options: (1) write to a different, self-chosen namespace (e.g. a different name instead of /kv/contrib), (2) wait for a slot to be reclaimed — idle notes are reclaimed after 7 days, a newly opened room that never got its first message after 24 hours. (Source: the community support bot's live response.)" }
+    }
+  };
+
+  function issueField(issue, field) {
+    if (lang === "en" && EN_ISSUES[issue.id] && EN_ISSUES[issue.id][field]) return EN_ISSUES[issue.id][field];
+    return issue[field];
+  }
+  function flowNodeText(issue, node) {
+    if (lang === "en" && EN_FLOWS[issue.id] && EN_FLOWS[issue.id][node.id] && EN_FLOWS[issue.id][node.id].text) return EN_FLOWS[issue.id][node.id].text;
+    return node.text;
+  }
+  function flowOptionLabel(issue, node, idx) {
+    if (lang === "en" && EN_FLOWS[issue.id] && EN_FLOWS[issue.id][node.id] && EN_FLOWS[issue.id][node.id].options) return EN_FLOWS[issue.id][node.id].options[idx];
+    return node.options[idx].label;
+  }
+  function srcLabel(issue) {
+    if (issue.src === "resmi") return t("srcResmi");
+    if (issue.src === "canli") return t("srcCanli");
+    return t("srcTopluluk") + " · seq " + issue.ref;
+  }
+  function freqPhrase(f) {
+    return f === "sik" ? t("freqSik") : f === "bazen" ? t("freqBazen") : t("freqNadir");
+  }
 
   var themeBtn = document.getElementById("themeToggle");
   var root = document.documentElement;
@@ -664,27 +876,36 @@
     if (s === "light") return false;
     return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
   }
-  function syncThemeLabel() { themeBtn.textContent = isDark() ? "Açık" : "Koyu"; }
+  function syncTheme() { themeBtn.textContent = isDark() ? t("themeBtnLight") : t("themeBtn"); }
   themeBtn.addEventListener("click", function () {
     root.setAttribute("data-theme", isDark() ? "light" : "dark");
-    syncThemeLabel();
+    syncTheme();
   });
-  syncThemeLabel();
+  var origApplyI18n = applyI18n;
+  applyI18n = function () { origApplyI18n(); syncTheme(); };
+  syncTheme();
 
   var chipRow = document.getElementById("chipRow");
   var activeCats = new Set(Object.keys(CATS));
+  var chipEls = {};
+  function updateChipLabels() {
+    Object.keys(CATS).forEach(function (key) {
+      if (chipEls[key]) chipEls[key].innerHTML = '<span class="dot"></span>' + catLabel(key);
+    });
+  }
   Object.keys(CATS).forEach(function (key) {
     var chip = document.createElement("button");
     chip.className = "chip";
     chip.setAttribute("aria-pressed", "true");
     chip.style.setProperty("--chip-color", "var(" + CATS[key].color + ")");
-    chip.innerHTML = '<span class="dot"></span>' + CATS[key].label;
+    chip.innerHTML = '<span class="dot"></span>' + catLabel(key);
     chip.addEventListener("click", function () {
       if (activeCats.has(key)) { activeCats.delete(key); chip.setAttribute("aria-pressed", "false"); }
       else { activeCats.add(key); chip.setAttribute("aria-pressed", "true"); }
       render();
     });
     chipRow.appendChild(chip);
+    chipEls[key] = chip;
   });
 
   var searchInput = document.getElementById("searchInput");
@@ -692,8 +913,6 @@
   var cardList = document.getElementById("cardList");
   var emptyState = document.getElementById("emptyState");
   var resultsMeta = document.getElementById("resultsMeta");
-
-  function freqLabel(f) { return f === "sik" ? "sık" : f === "bazen" ? "bazen" : "nadir"; }
 
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
@@ -713,8 +932,8 @@
     q = q.toLowerCase();
     return (
       issue.symptom.toLowerCase().indexOf(q) !== -1 ||
-      issue.cause.toLowerCase().indexOf(q) !== -1 ||
-      issue.fix.toLowerCase().indexOf(q) !== -1 ||
+      issueField(issue, "cause").toLowerCase().indexOf(q) !== -1 ||
+      issueField(issue, "fix").toLowerCase().indexOf(q) !== -1 ||
       (issue.cmd || "").toLowerCase().indexOf(q) !== -1
     );
   }
@@ -743,36 +962,36 @@
       return '<span class="crumb' + (isLast ? " current" : "") + '">' + (i + 1) + '</span>';
     }).join('<span class="sep">›</span>');
 
-    var body = '<div class="flow-node-text">' + escapeHtml(node.text) + '</div>';
+    var body = '<div class="flow-node-text">' + escapeHtml(flowNodeText(issue, node)) + '</div>';
 
     if (node.cmd) {
       body += '<div class="flow-cmd"><div class="cmd-block">' + escapeHtml(node.cmd) + '</div>' +
-        '<button class="flow-copy" data-copy="' + encodeURIComponent(node.cmd) + '">kopyala</button></div>';
+        '<button class="flow-copy" data-copy="' + encodeURIComponent(node.cmd) + '">' + t("copy") + '</button></div>';
     }
     if (node.url) {
       body += '<div class="url-block"><a href="' + escapeHtml(node.url) + '" target="_blank" rel="noopener">' +
-        escapeHtml(node.url) + '</a><span class="url-hint">tarayıcıda aç, terminal komutu değil</span></div>';
+        escapeHtml(node.url) + '</a><span class="url-hint">' + t("urlHint") + '</span></div>';
     }
 
     if (node.isEnd) {
       var oc = node.outcome || "success";
       var icon = oc === "success" ? "✓" : "!";
       body += '<div class="flow-outcome ' + oc + '"><span class="badge">' + icon + '</span>' +
-        (oc === "success" ? "Çözüldü" : "Dikkat") + '</div>';
+        (oc === "success" ? t("flowResolved") : t("flowHeadsUp")) + '</div>';
       body += '<div class="flow-next-row">' +
-        '<button class="flow-btn secondary" data-action="restart">Baştan başla</button>' +
-        '<button class="flow-btn secondary" data-action="close">Kapat</button>' +
+        '<button class="flow-btn secondary" data-action="restart">' + t("restart") + '</button>' +
+        '<button class="flow-btn secondary" data-action="close">' + t("close") + '</button>' +
         '</div>';
     } else if (node.options && node.options.length) {
-      body += '<div class="flow-options">' + node.options.map(function (opt) {
-        return '<button class="flow-opt-btn" data-goto="' + escapeHtml(opt.next) + '">' + escapeHtml(opt.label) + '</button>';
+      body += '<div class="flow-options">' + node.options.map(function (opt, oidx) {
+        return '<button class="flow-opt-btn" data-goto="' + escapeHtml(opt.next) + '">' + escapeHtml(flowOptionLabel(issue, node, oidx)) + '</button>';
       }).join("") + '</div>';
     } else if (node.next) {
-      body += '<div class="flow-next-row"><button class="flow-btn" data-goto="' + escapeHtml(node.next) + '">İleri →</button></div>';
+      body += '<div class="flow-next-row"><button class="flow-btn" data-goto="' + escapeHtml(node.next) + '">' + t("next") + '</button></div>';
     }
 
     var backBtn = state.stack.length > 1
-      ? '<button class="flow-copy" data-action="back" style="margin-left:auto">← geri</button>' : "";
+      ? '<button class="flow-copy" data-action="back" style="margin-left:auto">' + t("back") + '</button>' : "";
 
     return '<div class="flow-panel" data-issue="' + key + '">' +
       '<div class="flow-crumbs">' + crumbs + backBtn + '</div>' +
@@ -786,8 +1005,8 @@
     var filtered = ISSUES.filter(function (i) { return activeCats.has(i.cat) && matches(i, q); });
 
     resultsMeta.textContent = filtered.length === ISSUES.length
-      ? filtered.length + " sorun listeleniyor"
-      : filtered.length + " / " + ISSUES.length + " sorun eşleşti";
+      ? t("resultsAll").replace("{n}", filtered.length)
+      : t("resultsFiltered").replace("{n}", filtered.length).replace("{m}", ISSUES.length);
 
     cardList.innerHTML = "";
     emptyState.style.display = filtered.length ? "none" : "";
@@ -800,36 +1019,34 @@
       card.dataset.key = key;
       card.style.setProperty("--cat-color", "var(" + cat.color + ")");
 
-      var srcTag = issue.src === "resmi"
-        ? '<span class="tag src">resmi araç kodu</span>'
-        : '<span class="tag src">topluluk · seq ' + issue.ref + '</span>';
+      var srcTag = '<span class="tag src">' + srcLabel(issue) + '</span>';
 
       var isOpen = flowState[key] && flowState[key].open;
       var flowBtn = issue.flow
         ? '<button class="flow-toggle" data-flow-toggle aria-expanded="' + (isOpen ? "true" : "false") + '">' +
-            '<span class="arrow">›</span> ' + (isOpen ? "Adımları kapat" : "Adım adım çöz") +
+            '<span class="arrow">›</span> ' + (isOpen ? t("flowClose") : t("flowOpen")) +
           '</button>'
         : "";
 
       card.innerHTML =
         '<div class="card-top">' +
           '<div class="card-tags">' +
-            '<span class="tag cat">' + cat.label + '</span>' +
-            '<span class="tag freq-' + issue.freq + '">' + freqLabel(issue.freq) + ' görülür</span>' +
+            '<span class="tag cat">' + catLabel(issue.cat) + '</span>' +
+            '<span class="tag freq-' + issue.freq + '">' + freqPhrase(issue.freq) + '</span>' +
           '</div>' +
         '</div>' +
         '<div class="symptom">' + highlight(issue.symptom, q) + '</div>' +
         '<div class="card-body">' +
           '<div>' +
-            '<div class="field-label">Neden</div>' +
-            '<div class="field-value">' + highlight(issue.cause, q) + '</div>' +
+            '<div class="field-label">' + t("fieldCause") + '</div>' +
+            '<div class="field-value">' + highlight(issueField(issue, "cause"), q) + '</div>' +
           '</div>' +
           '<div>' +
-            '<div class="field-label">Çözüm</div>' +
-            '<div class="field-value">' + highlight(issue.fix, q) + '</div>' +
+            '<div class="field-label">' + t("fieldFix") + '</div>' +
+            '<div class="field-value">' + highlight(issueField(issue, "fix"), q) + '</div>' +
             (issue.cmd ? '<div class="cmd-block">' + escapeHtml(issue.cmd) + '</div>' : '') +
-            (issue.note ? '<div class="field-value" style="margin-top:8px; font-size:13px; color:var(--ink-muted);">' + escapeHtml(issue.note) + '</div>' : '') +
-            (issue.url ? '<div class="url-block"><a href="' + escapeHtml(issue.url) + '" target="_blank" rel="noopener">' + escapeHtml(issue.url) + '</a><span class="url-hint">tarayıcıda aç, terminal komutu değil</span></div>' : '') +
+            (issueField(issue, "note") ? '<div class="field-value" style="margin-top:8px; font-size:13px; color:var(--ink-muted);">' + escapeHtml(issueField(issue, "note")) + '</div>' : '') +
+            (issue.url ? '<div class="url-block"><a href="' + escapeHtml(issue.url) + '" target="_blank" rel="noopener">' + escapeHtml(issue.url) + '</a><span class="url-hint">' + t("urlHint") + '</span></div>' : '') +
           '</div>' +
         '</div>' +
         flowBtn +
@@ -871,8 +1088,8 @@
       var text = decodeURIComponent(copyBtn.getAttribute("data-copy"));
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(function () {
-          copyBtn.textContent = "kopyalandı"; copyBtn.classList.add("copied");
-          setTimeout(function () { copyBtn.textContent = "kopyala"; copyBtn.classList.remove("copied"); }, 1400);
+          copyBtn.textContent = t("copied"); copyBtn.classList.add("copied");
+          setTimeout(function () { copyBtn.textContent = t("copy"); copyBtn.classList.remove("copied"); }, 1400);
         }).catch(function () {});
       }
       return;
@@ -896,8 +1113,12 @@
   document.getElementById("statTotal").textContent = ISSUES.length;
   document.getElementById("statCommunity").textContent = ISSUES.filter(function (i) { return i.src === "topluluk"; }).length;
 
-  render();
+  document.getElementById("langTR").addEventListener("click", function () { lang = "tr"; applyI18n(); });
+  document.getElementById("langEN").addEventListener("click", function () { lang = "en"; applyI18n(); });
+
+  applyI18n();
 })();
 </script>
+
 </body>
 </html>
