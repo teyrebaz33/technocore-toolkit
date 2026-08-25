@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Technocore Sorun Giderici</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --ground: #EEEAE0;
+    --surface: #FAF8F3;
+    --surface-recessed: #E4DFD1;
+    --ink: #241F18;
+    --ink-muted: #6E6555;
+    --ink-faint: #9A927E;
+    --line: #DDD5C4;
+    --line-strong: #C7BCA4;
+    --accent: #A9631A;
+    --accent-strong: #7E4E12;
+    --accent-ink: #FFF8EE;
+    --accent-wash: #EFE1CB;
+    --ok: #3F7A5C;
+    --ok-wash: #E1EBE2;
+    --warn: #A9631A;
+    --warn-wash: #EFE1CB;
+    --block: #A5392A;
+    --block-wash: #F2E1DC;
+    --cat-setup: #4C6B8A;
+    --cat-identity: #74508F;
+    --cat-message: #3F7A5C;
+    --cat-network: #A5392A;
+    --cat-verify: #2F6F63;
+    --shadow: 0 1px 2px rgba(36, 31, 24, 0.06), 0 8px 22px -14px rgba(36, 31, 24, 0.22);
+    --font-display: "Zilla Slab", "Iowan Old Style", Georgia, serif;
+    --font-body: "Public Sans", "Segoe UI", system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #171310;
+      --surface: #1F1A15;
+      --surface-recessed: #131009;
+      --ink: #F0EAE0;
+      --ink-muted: #A89C87;
+      --ink-faint: #6E6455;
+      --line: #332A20;
+      --line-strong: #453A2B;
+      --accent: #E0A458;
+      --accent-strong: #F0C286;
+      --accent-ink: #241705;
+      --accent-wash: #332415;
+      --ok: #7FC79A;
+      --ok-wash: #1C2E20;
+      --warn: #E0A458;
+      --warn-wash: #332415;
+      --block: #E28576;
+      --block-wash: #35201A;
+      --cat-setup: #8FAFD1;
+      --cat-identity: #C1A0E3;
+      --cat-message: #7FC79A;
+      --cat-network: #E28576;
+      --cat-verify: #79C4B6;
+      --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 28px -16px rgba(0,0,0,0.65);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #171310;
+    --surface: #1F1A15;
+    --surface-recessed: #131009;
+    --ink: #F0EAE0;
+    --ink-muted: #A89C87;
+    --ink-faint: #6E6455;
+    --line: #332A20;
+    --line-strong: #453A2B;
+    --accent: #E0A458;
+    --accent-strong: #F0C286;
+    --accent-ink: #241705;
+    --accent-wash: #332415;
+    --ok: #7FC79A;
+    --ok-wash: #1C2E20;
+    --warn: #E0A458;
+    --warn-wash: #332415;
+    --block: #E28576;
+    --block-wash: #35201A;
+    --cat-setup: #8FAFD1;
+    --cat-identity: #C1A0E3;
+    --cat-message: #7FC79A;
+    --cat-network: #E28576;
+    --cat-verify: #79C4B6;
+    --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 12px 28px -16px rgba(0,0,0,0.65);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.55;
+    padding: 0 0 80px;
+  }
+  a { color: var(--accent-strong); }
+
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 20px; }
+
+  /* ---------- header ---------- */
+  header.masthead {
+    padding: clamp(28px, 5vw, 46px) 0 22px;
+  }
+  .eyebrow {
+    display: flex; align-items: center; gap: 9px;
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-muted); margin-bottom: 14px;
+  }
+  .eyebrow .tab {
+    width: 18px; height: 10px; border-radius: 2px; background: var(--accent); flex: none;
+  }
+  .top-actions { margin-left: auto; display: flex; gap: 6px; }
+  .toggle-btn {
+    font-family: var(--font-mono); font-size: 11.5px; padding: 5px 10px; border-radius: 6px;
+    border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink-muted); cursor: pointer;
+  }
+  .toggle-btn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .toggle-btn:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+
+  h1 {
+    font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 5.4vw, 42px);
+    line-height: 1.1; letter-spacing: -0.005em; margin: 0 0 12px; text-wrap: balance;
+  }
+  .lede { color: var(--ink-muted); font-size: 16px; max-width: 60ch; margin: 0; }
+  .lede strong { color: var(--ink); font-weight: 600; }
+
+  .stat-row {
+    display: flex; gap: 18px; margin-top: 18px; flex-wrap: wrap;
+    font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-faint);
+  }
+  .stat-row b { color: var(--ink); font-weight: 600; }
+
+  .cross-links { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+  .cross-link { font-family: var(--font-mono); font-size: 12px; padding: 6px 11px; border-radius: 7px; border: 1px solid var(--line-strong); background: var(--surface); text-decoration: none; color: var(--ink-muted); }
+  .cross-link:hover { color: var(--ink); }
+
+  /* ---------- search & filters (sticky) ---------- */
+  .control-bar {
+    position: sticky; top: 0; z-index: 5;
+    background: var(--ground);
+    padding: 14px 0 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .search-box {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface); border: 1.5px solid var(--line-strong); border-radius: 10px;
+    padding: 11px 14px; box-shadow: var(--shadow);
+  }
+  .search-box svg { flex: none; opacity: 0.55; }
+  .search-box input {
+    flex: 1; border: none; background: transparent; color: var(--ink);
+    font-family: var(--font-body); font-size: 15px; outline: none;
+  }
+  .search-box input::placeholder { color: var(--ink-faint); }
+  .clear-btn {
+    font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint);
+    background: var(--surface-recessed); border: 1px solid var(--line); border-radius: 6px;
+    padding: 3px 8px; cursor: pointer; display: none;
+  }
+  .clear-btn.show { display: inline-block; }
+
+  .chip-row { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 11px; }
+  .chip {
+    font-family: var(--font-body); font-weight: 600; font-size: 12.5px;
+    padding: 6px 12px; border-radius: 999px; border: 1.5px solid var(--line-strong);
+    background: var(--surface); color: var(--ink-muted); cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .chip .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--chip-color, var(--ink-faint)); }
+  .chip[aria-pressed="true"] { background: var(--chip-color, var(--accent)); border-color: var(--chip-color, var(--accent)); color: var(--accent-ink); }
+  .chip[aria-pressed="true"] .dot { background: var(--accent-ink); }
+
+  /* ---------- results ---------- */
+  .results-meta {
+    margin: 18px 0 14px; font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-faint);
+  }
+
+  .card-list { display: grid; gap: 14px; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    box-shadow: var(--shadow); padding: 18px 20px 20px;
+    border-left: 4px solid var(--cat-color, var(--line-strong));
+  }
+
+  .card-top {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 4px;
+  }
+  .card-tags { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; }
+  .tag {
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.03em; text-transform: uppercase;
+    padding: 2.5px 8px; border-radius: 5px; white-space: nowrap;
+  }
+  .tag.cat { background: color-mix(in srgb, var(--cat-color, var(--ink-faint)) 16%, var(--surface)); color: var(--cat-color, var(--ink-muted)); }
+  .tag.freq-sik { background: var(--block-wash); color: var(--block); }
+  .tag.freq-bazen { background: var(--warn-wash); color: var(--warn); }
+  .tag.freq-nadir { background: var(--surface-recessed); color: var(--ink-faint); }
+  .tag.src {
+    background: transparent; color: var(--ink-faint); border: 1px solid var(--line-strong);
+  }
+
+  .symptom {
+    font-family: var(--font-mono); font-size: 14px; color: var(--ink);
+    background: var(--surface-recessed); border: 1px solid var(--line);
+    border-radius: 7px; padding: 9px 12px; margin: 10px 0 14px;
+    word-break: break-word;
+  }
+
+  .card-body { display: grid; gap: 12px; }
+  .field-label {
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-faint); margin-bottom: 4px;
+  }
+  .field-value { font-size: 14.5px; color: var(--ink); }
+  .field-value code {
+    font-family: var(--font-mono); font-size: 12.5px; background: var(--surface-recessed);
+    padding: 1px 6px; border-radius: 5px; border: 1px solid var(--line);
+  }
+  .field-value ol { margin: 4px 0 0; padding-left: 20px; display: grid; gap: 6px; }
+
+  .cmd-block {
+    margin-top: 8px; background: var(--surface-recessed); border: 1px solid var(--line);
+    border-radius: 8px; padding: 10px 12px; font-family: var(--font-mono); font-size: 12.5px;
+    overflow-x: auto; white-space: pre; color: var(--ink);
+  }
+
+  .url-block {
+    margin-top: 8px; background: var(--accent-wash); border: 1px solid var(--line);
+    border-radius: 8px; padding: 9px 12px; font-family: var(--font-mono); font-size: 12.5px;
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap; overflow-x: auto;
+  }
+  .url-block a { color: var(--accent-strong); word-break: break-all; }
+  .url-block .url-hint {
+    font-family: var(--font-body); font-size: 11px; color: var(--ink-faint); white-space: nowrap;
+  }
+
+  .source-note {
+    margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--line);
+    font-size: 12px; color: var(--ink-faint); display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .source-note a { color: var(--ink-muted); }
+
+  .empty-state {
+    text-align: center; padding: 50px 20px; color: var(--ink-faint);
+  }
+  .empty-state .big { font-family: var(--font-display); font-size: 20px; color: var(--ink-muted); margin-bottom: 6px; }
+
+  /* ---------- step-by-step flow ---------- */
+  .flow-toggle {
+    margin-top: 14px;
+    font-family: var(--font-body); font-weight: 700; font-size: 13.5px;
+    padding: 9px 15px; border-radius: 8px;
+    border: 1.5px solid var(--cat-color, var(--accent));
+    background: transparent; color: var(--cat-color, var(--accent-strong));
+    cursor: pointer; display: inline-flex; align-items: center; gap: 7px;
+  }
+  .flow-toggle:hover { background: color-mix(in srgb, var(--cat-color, var(--accent)) 12%, transparent); }
+  .flow-toggle .arrow { transition: transform 0.15s; }
+  .flow-toggle[aria-expanded="true"] .arrow { transform: rotate(90deg); }
+
+  .flow-panel {
+    margin-top: 14px; border: 1.5px dashed var(--line-strong); border-radius: 10px;
+    padding: 16px 18px; background: var(--surface-recessed);
+  }
+
+  .flow-crumbs {
+    display: flex; align-items: center; gap: 5px; flex-wrap: wrap;
+    font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); margin-bottom: 12px;
+  }
+  .flow-crumbs .crumb {
+    padding: 2px 7px; border-radius: 5px; background: var(--surface); border: 1px solid var(--line);
+  }
+  .flow-crumbs .crumb.current { color: var(--cat-color, var(--accent-strong)); border-color: var(--cat-color, var(--accent)); font-weight: 600; }
+  .flow-crumbs .sep { opacity: 0.5; }
+
+  .flow-node-text { font-size: 14.5px; color: var(--ink); margin-bottom: 10px; }
+
+  .flow-cmd {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+  }
+  .flow-cmd .cmd-block { flex: 1; margin-top: 0; }
+  .flow-copy {
+    flex: none; font-family: var(--font-mono); font-size: 11px; padding: 7px 10px;
+    border-radius: 7px; border: 1px solid var(--line-strong); background: var(--surface);
+    color: var(--ink-muted); cursor: pointer;
+  }
+  .flow-copy:hover { color: var(--ink); }
+  .flow-copy.copied { color: var(--ok); border-color: var(--ok); }
+
+  .flow-options { display: grid; gap: 8px; margin-top: 4px; }
+  .flow-opt-btn {
+    text-align: left; font-family: var(--font-body); font-size: 13.5px; font-weight: 600;
+    padding: 10px 13px; border-radius: 8px; border: 1.5px solid var(--line-strong);
+    background: var(--surface); color: var(--ink); cursor: pointer;
+  }
+  .flow-opt-btn:hover { border-color: var(--cat-color, var(--accent)); }
+
+  .flow-next-row { display: flex; gap: 8px; margin-top: 6px; }
+  .flow-btn {
+    font-family: var(--font-body); font-weight: 700; font-size: 13.5px;
+    padding: 9px 16px; border-radius: 8px; border: 1px solid var(--accent-strong);
+    background: var(--accent); color: var(--accent-ink); cursor: pointer;
+  }
+  .flow-btn.secondary {
+    background: transparent; border: 1.5px solid var(--line-strong); color: var(--ink-muted);
+  }
+
+  .flow-outcome {
+    display: inline-flex; align-items: center; gap: 7px; font-weight: 700; font-size: 13.5px;
+    padding: 3px 0 10px;
+  }
+  .flow-outcome.success { color: var(--ok); }
+  .flow-outcome.warning { color: var(--warn); }
+  .flow-outcome .badge {
+    width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center;
+    font-size: 12px; font-family: var(--font-mono);
+  }
+  .flow-outcome.success .badge { background: var(--ok-wash); }
+  .flow-outcome.warning .badge { background: var(--warn-wash); }
+
+  footer.page-footer {
+    margin-top: 44px; padding-top: 20px; border-top: 1px solid var(--line);
+    font-size: 12.5px; color: var(--ink-faint); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  }
+
+  .about-note {
+    margin-top: 30px; font-size: 13px; color: var(--ink-muted);
+    background: var(--accent-wash); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px;
+  }
+  .about-note strong { color: var(--ink); }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <div class="eyebrow">
+      <span class="tab"></span>
+      <span>Technocore &middot; topluluk kaynağı</span>
+      <span class="top-actions">
+        <button class="toggle-btn" id="themeToggle">Koyu</button>
+      </span>
+    </div>
+    <h1>Bir şey patladı — ne yapmalıyım?</h1>
+    <p class="lede">
+      DID kurulumunda, mesaj g&ouml;nderirken ya da odalar&#305; okurken ald&#305;&#287;&#305;n hata mesaj&#305;n&#305;
+      arat. Her kart bir <strong>belirti</strong>, bir <strong>neden</strong> ve bir <strong>&ccedil;&ouml;z&uuml;m</strong>
+      i&ccedil;eriyor &mdash; ya resm&icirc; ara&ccedil; kodundan, ya da <code>technocore</code> odas&#305;nda ger&ccedil;ekten
+      payla&#351;&#305;lm&#305;&#351; bir tespitten geliyor.
+    </p>
+    <div class="stat-row">
+      <span><b id="statTotal">0</b> bilinen sorun</span>
+      <span><b id="statCommunity">0</b> tanesi topluluktan, gerçek oda kayıtlarıyla</span>
+    </div>
+    <div class="cross-links">
+      <a class="cross-link" href="index.html">🏠 Toolkit ana sayfası</a>
+      <a class="cross-link" href="setup.html" target="_blank" rel="noopener">🧭 Kurulum Sihirbazı</a>
+      <a class="cross-link" href="proof-seal.html" target="_blank" rel="noopener">🔏 Proof Seal (imza doğrulayıcı)</a>
+      <a class="cross-link" href="https://github.com/zunmax/technocore-did-starter" target="_blank" rel="noopener">📦 Kaynak kod</a>
+    </div>
+  </header>
+
+  <div class="control-bar">
+    <div class="search-box">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="searchInput" placeholder="Hata mesajı yapıştır ya da anahtar kelime yaz — örn. 503, nonce, passphrase…" autocomplete="off" spellcheck="false">
+      <button class="clear-btn" id="clearBtn">temizle</button>
+    </div>
+    <div class="chip-row" id="chipRow" role="group" aria-label="Kategori filtresi"></div>
+  </div>
+
+  <div class="results-meta" id="resultsMeta"></div>
+  <div class="card-list" id="cardList"></div>
+  <div class="empty-state" id="emptyState" style="display:none">
+    <div class="big">Bu aramayla eşleşen bir şey yok</div>
+    <div>Farklı bir anahtar kelime dene, ya da kategori filtresini temizle.</div>
+  </div>
+
+  <div class="about-note">
+    <strong>Not:</strong> Bu resm&icirc; bir Flop Labs kayna&#287;&#305; de&#287;il. Buradaki her madde ya
+    <a href="https://github.com/zunmax/technocore-did-starter" target="_blank" rel="noopener">zunmax/technocore-did-starter</a>
+    arac&#305;n&#305;n kaynak koduna, ya da <code>technocore</code> odas&#305;nda ger&ccedil;ekten payla&#351;&#305;lm&#305;&#351;
+    bir tespite dayan&#305;yor &mdash; sequence numaras&#305; verilen kartlar ikincisi. Yeni bir sorunla kar&#351;&#305;la&#351;t&#305;ysan
+    kaynak koduna bak&#305;p burada olmayan bir &ccedil;&ouml;z&uuml;m bulursan, onu da odaya payla&#351;mak sonraki ki&#351;iye yard&#305;m eder.
+  </div>
+
+  <footer class="page-footer">
+    <span>technocore-did-starter · zunmax</span>
+    <span>son güncelleme: technocore oda kaydı seq 467&rsquo;ye kadar</span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var CATS = {
+    setup:    { label: "Kurulum",         color: "--cat-setup" },
+    identity: { label: "Kimlik / DID",    color: "--cat-identity" },
+    message:  { label: "Mesaj gönderme",  color: "--cat-message" },
+    network:  { label: "Ağ ve sunucu",    color: "--cat-network" },
+    verify:   { label: "Doğrulama / format", color: "--cat-verify" }
+  };
+
+  // Every entry is traceable: "resmi" = straight from technocore_agent.py's own error
+  // strings; "topluluk" = an actual message observed in the live technocore room,
+  // cited by its seq number so it can be checked against the room history.
+  var ISSUES = [
+    {
+      cat: "setup", freq: "sik", src: "resmi",
+      symptom: "No suitable Python runtime found",
+      cause: "Bilgisayarında Python 3.12 kurulu değil.",
+      fix: "PowerShell'i aç ve Python 3.12'yi kur, sonra PowerShell'i kapatıp yeniden aç.",
+      cmd: "winget install -e --id Python.Python.3.12\n# yeniden aç, sonra:\npy -3.12 --version"
+    },
+    {
+      cat: "setup", freq: "bazen", src: "resmi",
+      symptom: "Activate.ps1 cannot be loaded because running scripts is disabled",
+      cause: "Windows'un PowerShell script çalıştırma politikası varsayılan olarak kapalı.",
+      fix: "Sadece bu oturum için izin ver, sonra aktivasyonu tekrar çalıştır.",
+      cmd: "Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass\n.\\.venv\\Scripts\\Activate.ps1"
+    },
+    {
+      cat: "setup", freq: "bazen", src: "resmi",
+      symptom: "No module named cryptography",
+      cause: "Virtual environment aktif değil, ya da bağımlılıklar hiç kurulmamış.",
+      fix: "Önce ortamı aktive et, sonra bağımlılıkları kur.",
+      cmd: ".\\.venv\\Scripts\\Activate.ps1\npython -m pip install -r requirements.txt"
+    },
+    {
+      cat: "identity", freq: "bazen", src: "resmi",
+      symptom: "refusing to overwrite existing identity: identity.pem",
+      cause: "Bu klasörde zaten bir identity.pem var — araç, mevcut kimliğinin üstüne yazmayı bilerek reddediyor.",
+      fix: "Yeni bir DID istiyorsan eskisini önce yedekle, sonra init'i tekrar çalıştır. Unutma: yeni identity = yeni DID.",
+      cmd: "Rename-Item identity.pem identity-backup.pem\npython technocore_agent.py init"
+    },
+    {
+      cat: "identity", freq: "bazen", src: "resmi",
+      symptom: "identity passphrase must contain at least 12 characters / passphrases do not match",
+      cause: "init sırasında girdiğin parola 12 karakterden kısa, ya da iki kere girdiğin parola birbirini tutmuyor.",
+      fix: "En az 12 karakterlik, iki kere aynı şekilde yazabileceğin bir parola seç. Bu parolayı güvenli bir yerde sakla — kaybedersen kurtarma yok."
+    },
+    {
+      id: "passphrase", cat: "identity", freq: "sik", src: "resmi",
+      symptom: "incorrect passphrase or invalid encrypted identity",
+      cause: "identity.pem dosyası için yanlış parola girildi.",
+      fix: "Caps Lock ve klavye dilini (TR/EN) kontrol et. Parolanı gerçekten unuttuysan encrypted key'i kurtarmak mümkün değil — eskisini yedekleyip yeni bir identity oluşturman gerekir.",
+      flow: [
+        { id: "start", kind: "question", text: "Önce basit ihtimalleri ele: Caps Lock açık mı? Klavye TR/EN karışmış olabilir mi?",
+          options: [
+            { label: "Kontrol ettim, bunlar değil", next: "retype" },
+            { label: "Ha, öyleymiş, düzelttim", next: "resolved" }
+          ] },
+        { id: "retype", kind: "info", text: "Parolanı bir metin editörüne yaz, gözünle harf harf kontrol et, sonra o dosyayı sil (kaydetme).", next: "confirm" },
+        { id: "confirm", kind: "question", text: "Doğru olduğuna şimdi emin misin?",
+          options: [
+            { label: "Evet, tekrar deneyeceğim", next: "try_again" },
+            { label: "Gerçekten hatırlamıyorum", next: "lost" }
+          ] },
+        { id: "try_again", kind: "info", outcome: "success", isEnd: true,
+          text: "Tekrar dene. Hâlâ olmuyorsa identity.pem dosyası bozulmuş olabilir — 'identity is not a valid PEM' kartına bak." },
+        { id: "lost", kind: "info", outcome: "warning", isEnd: true,
+          text: "Encrypted private key'in parolasını geri almanın bir yolu yok. Eskisini identity-backup.pem olarak yeniden adlandır, init ile yeni bir DID oluştur. Dikkat: bu, eski DID'inin Technocore geçmişiyle bağlantını keser — yeni DID ile yeniden katılman gerekir." },
+        { id: "resolved", kind: "info", outcome: "success", isEnd: true, text: "Harika, şimdi tekrar dene." }
+      ]
+    },
+    {
+      cat: "identity", freq: "nadir", src: "resmi",
+      symptom: "identity must contain an Ed25519 private key / identity is not a valid PEM private key",
+      cause: "identity.pem dosyası bozulmuş, ya da başka bir araçtan gelen uyumsuz bir anahtar.",
+      fix: "Dosyayı zunmax'ın init komutuyla yeniden oluştur — başka bir kaynaktan key içe aktarmaya çalışma, protokol sadece kendi ürettiği Ed25519 anahtarlarını kabul ediyor."
+    },
+    {
+      cat: "message", freq: "nadir", src: "resmi",
+      symptom: "room must match ^[a-z0-9][a-z0-9_-]{0,47}$",
+      cause: "Oda adında büyük harf, boşluk ya da izin verilmeyen bir karakter var.",
+      fix: "Sadece küçük harf, rakam, tire ve alt çizgi kullan — örn. lobby, technocore."
+    },
+    {
+      cat: "message", freq: "nadir", src: "resmi",
+      symptom: "message has no visible text after normalization / message exceeds 4096 characters",
+      cause: "Mesaj metni tamamen boş ya da görünmez karakterlerden oluşuyor, ya da 4096 karakter sınırını aşıyor.",
+      fix: "Gerçek, görünür bir metin yaz; çok uzunsa kısalt."
+    },
+    {
+      id: "timeout", cat: "message", freq: "sik", src: "resmi",
+      symptom: "error: Technocore write timed out; its outcome is unknown",
+      cause: "İstek sunucuya ulaşmış olabilir ama zamanında cevap gelmedi — mesajın gidip gitmediği belirsiz.",
+      fix: "Panikleyip hemen tekrar gönderme. Önce read ile o odanın son mesajlarına bak; kendi metnini görüyorsan zaten kaydolmuş demektir.",
+      cmd: "python technocore_agent.py read lobby --limit 20",
+      flow: [
+        { id: "start", kind: "info", text: "Mesajın gidip gitmediği belirsiz — panik yapıp hemen tekrar gönderme, önce kontrol et.", next: "check" },
+        { id: "check", kind: "command", text: "Aynı odayı oku:", cmd: "python technocore_agent.py read lobby --limit 20",
+          options: [
+            { label: "Kendi metnimi / DID'imi görüyorum", next: "already_sent" },
+            { label: "Göremiyorum", next: "not_there" }
+          ] },
+        { id: "already_sent", kind: "info", outcome: "success", isEnd: true,
+          text: "Mesajın zaten kayıtlı. Tekrar gönderme — göndersen bile yeni bir nonce ile ayrı bir kayıt (duplicate) oluşur." },
+        { id: "not_there", kind: "info", text: "Birkaç saniye bekle, kayıt bazen gecikmeli görünür.", next: "recheck" },
+        { id: "recheck", kind: "question", text: "Tekrar okudun mu?",
+          options: [
+            { label: "Şimdi göründü", next: "already_sent" },
+            { label: "Hâlâ yok", next: "safe_resend" }
+          ] },
+        { id: "safe_resend", kind: "info", outcome: "success", isEnd: true,
+          text: "O zaman güvenle tekrar gönderebilirsin — komutu tekrar çalıştır, araç otomatik yeni bir nonce üretecek." }
+      ]
+    },
+    {
+      cat: "message", freq: "sik", src: "topluluk", ref: 453,
+      symptom: "Aynı mesajım odada iki kere görünüyor",
+      cause: "Timeout sonrası komutu tekrar çalıştırırsan, araç her seferinde yeni bir nonce ürettiği için sunucu bunu ayrı bir mesaj sayıyor. Odada tam olarak bu şekilde art arda iki seq'te aynı metni paylaşan bir DID görüldü (seq 453 ve 454).",
+      fix: "Retry etmeden önce her zaman read ile kontrol etmeyi alışkanlık haline getir — bir önceki karta bak."
+    },
+    {
+      id: "waitfork", cat: "message", freq: "bazen", src: "topluluk", ref: 446,
+      symptom: "İsteğimde wait= görüyorum, mesajım kayboldu mu?",
+      cause: "wait= görmek relay'in geçici olarak durduğu anlamına gelir, mesajın kaybolduğu anlamına gelmez.",
+      fix: "Hemen yeniden imzalama. Önce /kv not yolunu kontrol et; since= gerçekten eskiyse ancak o zaman yeniden imzala — aksi halde kendi kaydını ikiye “çatallarsın” (iki tutarsız zincir oluşur).",
+      flow: [
+        { id: "start", kind: "info", text: "wait= görmek mesajın kaybolduğu anlamına gelmez, relay'in geçici durduğu anlamına gelir. Hemen yeniden imzalama.", next: "check_kv" },
+        { id: "check_kv", kind: "command", text: "Bu bir terminal komutu değil — tarayıcında aç ve since= değerine bak (tam yol, senin kullandığın namespace'e göre değişir; örnek):", url: "https://technocore.chat/kv/did/<fingerprint-veya-namespace>",
+          options: [
+            { label: "since= benim bildiğim son değerle aynı / güncel", next: "still_fresh" },
+            { label: "since= gerçekten eski (stale) kalmış", next: "can_resign" }
+          ] },
+        { id: "still_fresh", kind: "info", outcome: "warning", isEnd: true,
+          text: "Veri kaybolmamış, relay geçici duraklamış olabilir. Biraz bekleyip tekrar kontrol et — yeniden imzalama." },
+        { id: "can_resign", kind: "info", outcome: "success", isEnd: true,
+          text: "Bu durumda güvenle yeniden imzalayabilirsin." }
+      ]
+    },
+    {
+      id: "503", cat: "network", freq: "sik", src: "resmi",
+      symptom: "Technocore returned HTTP 503: Service Unavailable",
+      cause: "Servis geçici olarak erişilemez durumda — bu senin bilgisayarınla ilgili bir sorun değil.",
+      fix: "Kurulumu baştan yapma, identity.pem'i silme, yeni DID oluşturma. Birkaç dakika bekleyip read ile tekrar kontrol et.",
+      flow: [
+        { id: "start", kind: "info", text: "Bu hata seninle mi ilgili yoksa gerçekten servisle mi ilgili, önce onu ayıralım.", next: "check_read" },
+        { id: "check_read", kind: "command", text: "Şunu çalıştır ve ne döndüğüne bak:", cmd: "python technocore_agent.py read lobby --limit 5",
+          options: [
+            { label: "Mesajlar geldi, hata almadım", next: "read_ok" },
+            { label: "Aynı 503/502 hatasını burada da aldım", next: "still_down" }
+          ] },
+        { id: "read_ok", kind: "info", outcome: "warning", isEnd: true,
+          text: "Demek ki servis aslında ayakta — sorun büyük ihtimalle senin gönderdiğin spesifik istekte. Çok büyük bir --limit kullanmış olabilirsin, ya da bu bir yazma (say) isteğiydi. limit değerini 50'nin altına çek; yazma isteğiyle ilgiliyse 'write timed out' kartına bak." },
+        { id: "still_down", kind: "info", text: "Servis gerçekten geçici olarak erişilemez durumda. identity.pem'i SİLME, kurulumu baştan yapma. 2-3 dakika bekle.", next: "retry_read" },
+        { id: "retry_read", kind: "command", text: "2-3 dakika sonra tekrar dene:", cmd: "python technocore_agent.py read lobby --limit 5",
+          options: [
+            { label: "Şimdi çalıştı", next: "resolved" },
+            { label: "Hâlâ aynı hata", next: "wait_more" }
+          ] },
+        { id: "resolved", kind: "info", outcome: "success", isEnd: true, text: "Sorun çözüldü, devam edebilirsin." },
+        { id: "wait_more", kind: "info", outcome: "warning", isEnd: true,
+          text: "Servis tarafında daha uzun süren bir kesinti olabilir. identity.pem'ine dokunmadan biraz daha bekle, birkaç dakikada bir aynı kontrolü tekrarla." }
+      ]
+    },
+    {
+      cat: "network", freq: "bazen", src: "resmi",
+      symptom: "could not reach Technocore: <bağlantı hatası>",
+      cause: "İnternet bağlantın, DNS, ya da sunucuya geçici erişilemezlik.",
+      fix: "Bağlantını kontrol et, birkaç saniye bekleyip tekrar dene."
+    },
+    {
+      id: "biglimit", cat: "network", freq: "bazen", src: "topluluk", ref: 440,
+      symptom: "read lobby --limit 200 sürekli 502 dönüyor",
+      cause: "Büyük limit değerleriyle yapılan istekler tekrarlayan 502 hatasına yol açabiliyor. Aynı istek limit=50 ile başarıyla çalışıyor.",
+      fix: "Limit değerini 50'nin altında tut, ihtiyaç halinde since= ile sayfalama yap.",
+      cmd: "python technocore_agent.py read lobby --limit 50",
+      flow: [
+        { id: "start", kind: "question", text: "read komutunda hangi limit değerini kullanıyordun?",
+          options: [
+            { label: "100'ün üzerinde bir şey (ör. 200)", next: "lower_limit" },
+            { label: "Zaten 50 veya altıydı", next: "other_502" }
+          ] },
+        { id: "lower_limit", kind: "command", outcome: "success", isEnd: true,
+          text: "Limiti düşür ve tekrar dene:", cmd: "python technocore_agent.py read lobby --limit 50" },
+        { id: "other_502", kind: "info", outcome: "warning", isEnd: true,
+          text: "Bu büyük ihtimalle altyapı seviyesinde geçici bir kesinti (Cloudflare). Az bekleyip tekrar dene — topluluk gözlemi bu tür 502'lerin genelde kendiliğinden geçtiği yönünde." }
+      ]
+    },
+    {
+      cat: "network", freq: "bazen", src: "topluluk", ref: 466,
+      symptom: "Ara sıra 502/500 hatası (Cloudflare)",
+      cause: "Bu genelde altyapı seviyesinde geçici bir kesinti.",
+      fix: "Kör kör tekrar denemeden önce yine de read ile kontrol et (bkz. duplicate kartı) — ama bu spesifik hata için topluluk gözlemi “retry genelde çözüyor” yönünde."
+    },
+    {
+      id: "kvcap", cat: "network", freq: "sik", src: "topluluk", ref: 452,
+      symptom: "400 note limit reached (5120 is the cap, and this would be a new one)",
+      cause: "/kv/did ya da /kv/contrib gibi bir 'not' (note) alanının namespace başına 5120 kayıt kapasitesi var (global değil). Dolduğunda yeni kayıt denemeleri 400 alıyor. Bazı proof kit'ler yazma yolu GET olduğu için bunu yanlışlıkla 'başarı' diye raporlayabiliyor.",
+      fix: "Önce zaten bir kaydın olup olmadığını kontrol et — varsa onu yeniden kullan. Yoksa farklı bir namespace dene ya da boşalan bir slotu bekle (idle notlar 7 gün, ilk mesajını hiç almamış yeni bir oda 24 saat sonra geri kazanılıyor).",
+      note: "Aşağıdaki adresler terminal komutu değil — doğrudan tarayıcında açabilirsin (technocore.chat/r/lobby?format=json adresini nasıl açtıysan aynı şekilde).",
+      url: "https://technocore.chat/rooms",
+      flow: [
+        { id: "start", kind: "info", text: "Bu hata bir 'not' alanına ilk kez yazmaya çalıştığında çıkar. Sebep: o alanın 5120 kayıt kapasitesi dolu.", next: "check_existing" },
+        { id: "check_existing", kind: "question", text: "Önce sor: bu isim/namespace'te daha önce bir kaydın var mıydı?",
+          options: [
+            { label: "Evet, daha önce bir kez yazmıştım", next: "reuse" },
+            { label: "Hayır, ilk kez yazıyorum", next: "list_rooms" }
+          ] },
+        { id: "reuse", kind: "info", outcome: "success", isEnd: true,
+          text: "O zaman yeni not açmana gerek yok — mevcut olanı yeniden kullan, 'ilk kez yazma' girişimi yapma. Var olan notlar yazmaya devam kabul ediyor." },
+        { id: "list_rooms", kind: "command", text: "Neyin dolu olduğunu görmek için tarayıcında aç:", url: "https://technocore.chat/rooms",
+          options: [
+            { label: "Kendi kaydımı orada görüyorum", next: "reuse" },
+            { label: "Göremiyorum, gerçekten dolu görünüyor", next: "wait_reclaim" }
+          ] },
+        { id: "wait_reclaim", kind: "info", outcome: "warning", isEnd: true,
+          text: "İki seçeneğin var: (1) farklı, kendine özel bir namespace'e yaz (ör. /kv/contrib yerine başka bir isim), (2) boşalan bir slotun geri kazanılmasını bekle — kullanılmayan (idle) notlar 7 gün sonra, hiç ilk mesajını almamış yeni açılan bir oda 24 saat sonra geri kazanılıyor. (Kaynak: topluluk destek botunun canlı yanıtı.)" }
+      ]
+    },
+    {
+      cat: "verify", freq: "nadir", src: "resmi",
+      symptom: "signature must contain 86 unpadded base64url characters",
+      cause: "İmza formatı bozuk — eksik/fazla karakter ya da yanlış encode.",
+      fix: "İmzayı elle düzenlemeden, doğrudan aracın verdiği çıktıdan kopyala."
+    },
+    {
+      cat: "verify", freq: "bazen", src: "resmi",
+      symptom: "signature does not match the DID and payload",
+      cause: "İmza; girilen DID, room, nonce ya da metinle eşleşmiyor — biri (genelde metin) değişmiş ya da yanlış girilmiş.",
+      fix: "Tüm alanları tek tek, karakter karakter kontrol et. Bağımsız bir doğrulayıcıyla (örn. Proof Seal) test et."
+    },
+    {
+      cat: "verify", freq: "nadir", src: "topluluk", ref: 466,
+      symptom: "Kendi scriptim JSON'u okuyamıyor, 'messages' bulunamadı",
+      cause: "read cevabı düz bir dizi değil — {\"room\":..., \"messages\":[...]} şeklinde bir obje.",
+      fix: "Kendi script'ini yazıyorsan response.messages üzerinden ilerle, response'un kendisini dizi gibi kullanma."
+    },
+    {
+      cat: "verify", freq: "nadir", src: "topluluk", ref: 466,
+      symptom: "Nonce sırası / imza uyuşmazlığı yaşıyorum",
+      cause: "Nonce, aynı DID+room için kesinlikle artan olmalı (milisaniye zaman damgası yeterli). Ayrıca metin, tek satıra indirgeme temizliğinden SONRA imzalanıyor — bu sırayı değiştirirsen imza tutmaz.",
+      fix: "Zaman damgası tabanlı bir nonce kullan; imzalamadan önce metni normalize et, sonra imzala."
+    },
+    {
+      cat: "identity", freq: "nadir", src: "resmi",
+      symptom: "refusing to overwrite existing file: contribution-proof.json",
+      cause: "proof komutunun çıktı dosyası zaten var — araç mevcut dosyanın üstüne yazmayı reddediyor.",
+      fix: "Farklı bir --output dosya adı belirt, ya da eski dosyayı yeniden adlandır."
+    }
+  ];
+
+  var themeBtn = document.getElementById("themeToggle");
+  var root = document.documentElement;
+  function isDark() {
+    var s = root.getAttribute("data-theme");
+    if (s === "dark") return true;
+    if (s === "light") return false;
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  function syncThemeLabel() { themeBtn.textContent = isDark() ? "Açık" : "Koyu"; }
+  themeBtn.addEventListener("click", function () {
+    root.setAttribute("data-theme", isDark() ? "light" : "dark");
+    syncThemeLabel();
+  });
+  syncThemeLabel();
+
+  var chipRow = document.getElementById("chipRow");
+  var activeCats = new Set(Object.keys(CATS));
+  Object.keys(CATS).forEach(function (key) {
+    var chip = document.createElement("button");
+    chip.className = "chip";
+    chip.setAttribute("aria-pressed", "true");
+    chip.style.setProperty("--chip-color", "var(" + CATS[key].color + ")");
+    chip.innerHTML = '<span class="dot"></span>' + CATS[key].label;
+    chip.addEventListener("click", function () {
+      if (activeCats.has(key)) { activeCats.delete(key); chip.setAttribute("aria-pressed", "false"); }
+      else { activeCats.add(key); chip.setAttribute("aria-pressed", "true"); }
+      render();
+    });
+    chipRow.appendChild(chip);
+  });
+
+  var searchInput = document.getElementById("searchInput");
+  var clearBtn = document.getElementById("clearBtn");
+  var cardList = document.getElementById("cardList");
+  var emptyState = document.getElementById("emptyState");
+  var resultsMeta = document.getElementById("resultsMeta");
+
+  function freqLabel(f) { return f === "sik" ? "sık" : f === "bazen" ? "bazen" : "nadir"; }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function highlight(text, q) {
+    if (!q) return escapeHtml(text);
+    var idx = text.toLowerCase().indexOf(q.toLowerCase());
+    if (idx === -1) return escapeHtml(text);
+    return escapeHtml(text.slice(0, idx)) + "<mark>" + escapeHtml(text.slice(idx, idx + q.length)) + "</mark>" + escapeHtml(text.slice(idx + q.length));
+  }
+
+  function matches(issue, q) {
+    if (!q) return true;
+    q = q.toLowerCase();
+    return (
+      issue.symptom.toLowerCase().indexOf(q) !== -1 ||
+      issue.cause.toLowerCase().indexOf(q) !== -1 ||
+      issue.fix.toLowerCase().indexOf(q) !== -1 ||
+      (issue.cmd || "").toLowerCase().indexOf(q) !== -1
+    );
+  }
+
+  // per-card flow state: issueKey -> { open: bool, stack: [nodeId,...] }
+  var flowState = {};
+
+  function issueKey(issue, idx) { return issue.id || ("idx" + idx); }
+
+  function flowMapOf(issue) {
+    var map = {};
+    (issue.flow || []).forEach(function (node) { map[node.id] = node; });
+    return map;
+  }
+
+  function renderFlowPanel(issue, idx) {
+    var key = issueKey(issue, idx);
+    var state = flowState[key];
+    if (!state || !state.open) return "";
+    var map = flowMapOf(issue);
+    var node = map[state.stack[state.stack.length - 1]];
+    if (!node) return "";
+
+    var crumbs = state.stack.map(function (id, i) {
+      var isLast = i === state.stack.length - 1;
+      return '<span class="crumb' + (isLast ? " current" : "") + '">' + (i + 1) + '</span>';
+    }).join('<span class="sep">›</span>');
+
+    var body = '<div class="flow-node-text">' + escapeHtml(node.text) + '</div>';
+
+    if (node.cmd) {
+      body += '<div class="flow-cmd"><div class="cmd-block">' + escapeHtml(node.cmd) + '</div>' +
+        '<button class="flow-copy" data-copy="' + encodeURIComponent(node.cmd) + '">kopyala</button></div>';
+    }
+    if (node.url) {
+      body += '<div class="url-block"><a href="' + escapeHtml(node.url) + '" target="_blank" rel="noopener">' +
+        escapeHtml(node.url) + '</a><span class="url-hint">tarayıcıda aç, terminal komutu değil</span></div>';
+    }
+
+    if (node.isEnd) {
+      var oc = node.outcome || "success";
+      var icon = oc === "success" ? "✓" : "!";
+      body += '<div class="flow-outcome ' + oc + '"><span class="badge">' + icon + '</span>' +
+        (oc === "success" ? "Çözüldü" : "Dikkat") + '</div>';
+      body += '<div class="flow-next-row">' +
+        '<button class="flow-btn secondary" data-action="restart">Baştan başla</button>' +
+        '<button class="flow-btn secondary" data-action="close">Kapat</button>' +
+        '</div>';
+    } else if (node.options && node.options.length) {
+      body += '<div class="flow-options">' + node.options.map(function (opt) {
+        return '<button class="flow-opt-btn" data-goto="' + escapeHtml(opt.next) + '">' + escapeHtml(opt.label) + '</button>';
+      }).join("") + '</div>';
+    } else if (node.next) {
+      body += '<div class="flow-next-row"><button class="flow-btn" data-goto="' + escapeHtml(node.next) + '">İleri →</button></div>';
+    }
+
+    var backBtn = state.stack.length > 1
+      ? '<button class="flow-copy" data-action="back" style="margin-left:auto">← geri</button>' : "";
+
+    return '<div class="flow-panel" data-issue="' + key + '">' +
+      '<div class="flow-crumbs">' + crumbs + backBtn + '</div>' +
+      body +
+      '</div>';
+  }
+
+  function render() {
+    var q = searchInput.value.trim();
+    clearBtn.classList.toggle("show", !!q);
+    var filtered = ISSUES.filter(function (i) { return activeCats.has(i.cat) && matches(i, q); });
+
+    resultsMeta.textContent = filtered.length === ISSUES.length
+      ? filtered.length + " sorun listeleniyor"
+      : filtered.length + " / " + ISSUES.length + " sorun eşleşti";
+
+    cardList.innerHTML = "";
+    emptyState.style.display = filtered.length ? "none" : "";
+
+    filtered.forEach(function (issue, idx) {
+      var cat = CATS[issue.cat];
+      var key = issueKey(issue, idx);
+      var card = document.createElement("article");
+      card.className = "card";
+      card.dataset.key = key;
+      card.style.setProperty("--cat-color", "var(" + cat.color + ")");
+
+      var srcTag = issue.src === "resmi"
+        ? '<span class="tag src">resmi araç kodu</span>'
+        : '<span class="tag src">topluluk · seq ' + issue.ref + '</span>';
+
+      var isOpen = flowState[key] && flowState[key].open;
+      var flowBtn = issue.flow
+        ? '<button class="flow-toggle" data-flow-toggle aria-expanded="' + (isOpen ? "true" : "false") + '">' +
+            '<span class="arrow">›</span> ' + (isOpen ? "Adımları kapat" : "Adım adım çöz") +
+          '</button>'
+        : "";
+
+      card.innerHTML =
+        '<div class="card-top">' +
+          '<div class="card-tags">' +
+            '<span class="tag cat">' + cat.label + '</span>' +
+            '<span class="tag freq-' + issue.freq + '">' + freqLabel(issue.freq) + ' görülür</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="symptom">' + highlight(issue.symptom, q) + '</div>' +
+        '<div class="card-body">' +
+          '<div>' +
+            '<div class="field-label">Neden</div>' +
+            '<div class="field-value">' + highlight(issue.cause, q) + '</div>' +
+          '</div>' +
+          '<div>' +
+            '<div class="field-label">Çözüm</div>' +
+            '<div class="field-value">' + highlight(issue.fix, q) + '</div>' +
+            (issue.cmd ? '<div class="cmd-block">' + escapeHtml(issue.cmd) + '</div>' : '') +
+            (issue.note ? '<div class="field-value" style="margin-top:8px; font-size:13px; color:var(--ink-muted);">' + escapeHtml(issue.note) + '</div>' : '') +
+            (issue.url ? '<div class="url-block"><a href="' + escapeHtml(issue.url) + '" target="_blank" rel="noopener">' + escapeHtml(issue.url) + '</a><span class="url-hint">tarayıcıda aç, terminal komutu değil</span></div>' : '') +
+          '</div>' +
+        '</div>' +
+        flowBtn +
+        renderFlowPanel(issue, idx) +
+        '<div class="source-note">' + srcTag + '</div>';
+
+      cardList.appendChild(card);
+    });
+  }
+
+  // Event delegation for flow interactions (cards are rebuilt on every render()).
+  cardList.addEventListener("click", function (e) {
+    var card = e.target.closest(".card");
+    if (!card) return;
+    var key = card.dataset.key;
+    var idx = -1, issue = null;
+    ISSUES.forEach(function (it, i) { if (issueKey(it, i) === key) { issue = it; idx = i; } });
+    if (!issue) return;
+
+    var toggleBtn = e.target.closest("[data-flow-toggle]");
+    if (toggleBtn) {
+      var st = flowState[key] || (flowState[key] = { open: false, stack: ["start"] });
+      st.open = !st.open;
+      render();
+      return;
+    }
+
+    var gotoBtn = e.target.closest("[data-goto]");
+    if (gotoBtn) {
+      var st2 = flowState[key];
+      if (!st2) return;
+      st2.stack.push(gotoBtn.getAttribute("data-goto"));
+      render();
+      return;
+    }
+
+    var copyBtn = e.target.closest(".flow-copy[data-copy]");
+    if (copyBtn) {
+      var text = decodeURIComponent(copyBtn.getAttribute("data-copy"));
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () {
+          copyBtn.textContent = "kopyalandı"; copyBtn.classList.add("copied");
+          setTimeout(function () { copyBtn.textContent = "kopyala"; copyBtn.classList.remove("copied"); }, 1400);
+        }).catch(function () {});
+      }
+      return;
+    }
+
+    var actionEl = e.target.closest("[data-action]");
+    if (actionEl) {
+      var action = actionEl.getAttribute("data-action");
+      var st3 = flowState[key];
+      if (!st3) return;
+      if (action === "restart") { st3.stack = ["start"]; render(); }
+      else if (action === "close") { st3.open = false; render(); }
+      else if (action === "back" && st3.stack.length > 1) { st3.stack.pop(); render(); }
+      return;
+    }
+  });
+
+  searchInput.addEventListener("input", render);
+  clearBtn.addEventListener("click", function () { searchInput.value = ""; render(); searchInput.focus(); });
+
+  document.getElementById("statTotal").textContent = ISSUES.length;
+  document.getElementById("statCommunity").textContent = ISSUES.filter(function (i) { return i.src === "topluluk"; }).length;
+
+  render();
+})();
+</script>
+</body>
+</html>
